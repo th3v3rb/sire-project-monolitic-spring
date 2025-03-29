@@ -1,0 +1,54 @@
+package com.dantesoft.siremono.modules.items.categories.store;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.dantesoft.siremono.modules.items.categories.CategoryErrors;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class CategoryService {
+  private final CategoryRepository repository;
+
+  public CategoryEntity findByIdOrFail(UUID id) {
+    return repository.findById(id)
+        .orElseThrow(() -> new CategoryErrors.NotFoundException(id));
+  }
+
+  public Page<CategoryEntity> all(Pageable pageable) {
+    return repository.findAll(pageable);
+  }
+
+  public Page<CategoryEntity> allBySearchParam(
+      String searchParam,
+      Pageable pageable) {
+    return repository.findByNameContainingIgnoreCase(searchParam, pageable);
+  }
+
+  public CategoryEntity save(CategoryEntity category) {
+    return repository.save(category);
+  }
+
+  public Optional<CategoryEntity> findById(UUID id) {
+    return repository.findById(id);
+  }
+
+  public void delete(CategoryEntity category) {
+    repository.delete(category);
+  }
+
+  public int updateStatusWhereAllInIds(List<UUID> list, boolean status) {
+    return repository.updateActiveStatusByIds(list, status);
+  }
+
+  public int deleteWhereAllInIds(List<UUID> list) {
+    return repository.deleteAllByIds(list);
+  }
+}

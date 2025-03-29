@@ -1,0 +1,41 @@
+{
+	"folders": {},
+	"connections": {
+		"postgres-jdbc-195d4fa5f6f-b3bd8b486a7962d": {
+			"provider": "postgresql",
+			"driver": "postgres-jdbc",
+			"name": "debian",
+			"save-password": true,
+			"configuration": {
+				"host": "debian",
+				"port": "5432",
+				"url": "jdbc:postgresql://debian:5432/",
+				"configurationType": "MANUAL",
+				"home": "postgresql_client",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"provider-properties": {
+					"@dbeaver-show-non-default-db@": "true",
+					"@dbeaver-chosen-role@": ""
+				},
+				"auth-model": "native"
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": true,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
+		}
+	}
+}
