@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.dantesoft.siremono.internal.actions.ActionHandler;
+import com.dantesoft.siremono.internal.commands.CommandExecutor;
+import com.dantesoft.siremono.modules.people.contacts.actions.AttachContactAction;
 import com.dantesoft.siremono.modules.people.contacts.actions.AttachContactInput;
 import com.dantesoft.siremono.modules.people.contacts.actions.AttachContactOutput;
 import com.dantesoft.siremono.modules.people.contacts.actions.RemoveContactAction;
-import com.dantesoft.siremono.modules.people.contacts.actions.AttachContactAction;
-import com.dantesoft.siremono.modules.people.contacts.actions.UpdateContactAction;
 import com.dantesoft.siremono.modules.people.contacts.actions.RemoveContactInput;
 import com.dantesoft.siremono.modules.people.contacts.actions.RemoveContactOutput;
+import com.dantesoft.siremono.modules.people.contacts.actions.UpdateContactAction;
 import com.dantesoft.siremono.modules.people.contacts.actions.UpdateContactInput;
 import com.dantesoft.siremono.modules.people.contacts.actions.UpdateContactOutput;
 import com.dantesoft.siremono.modules.people.people.actions.PersonDeleteAction;
@@ -48,7 +47,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/products/people")
 public class PersonRest {
-  private final ActionHandler handler;
+  private final CommandExecutor handler;
 
   @GetMapping
   public ResponseEntity<PersonListOutput> all(@PageableDefault Pageable pageable,

@@ -1,21 +1,30 @@
 package com.dantesoft.siremono.internal.filters;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import org.springframework.http.HttpHeaders;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.dantesoft.siremono.modules.auth.store.services.CustomUserDetailsService;
-import com.dantesoft.siremono.modules.auth.store.services.JwtService;
+
+import com.dantesoft.siremono.internal.config.AppProperties;
+import com.dantesoft.siremono.modules.auth.store.JwtService;
+import com.dantesoft.siremono.modules.auth.store.entity.AccountEntity;
+import com.dantesoft.siremono.modules.auth.store.entity.RoleEntity;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,62 +35,95 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
   private final JwtService jwtService;
-  private final CustomUserDetailsService userService;
+  private final AppProperties app;
 
   @Override
-  protected void doFilterInternal(
-      @NonNull HttpServletRequest request,
-      @NonNull HttpServletResponse response,
-      @NonNull FilterChain filterChain) throws ServletException, IOException {
-    
-    final String requestURI = request.getRequestURI();
-    
+  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    return Arrays.stream(app.getWhiteListedEndpoints())
+        .anyMatch(e -> e.equals(request.getRequestURI()));
+  }
+
+
+  @Override
+  protected void doFilterInternal(@NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+      throws ServletException, IOException {
+    String requestURI = request.getRequestURI();
     try {
       String token = resolveToken(request);
-      
+
       if (token == null) {
-        log.debug("No token found for request to {}", requestURI);
-        filterChain.doFilter(request, response);
+        log.warn("No JWT cookie for request to {}", requestURI);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         return;
       }
       
       if (!jwtService.isTokenValid(token)) {
-        log.debug("Invalid token for request to {}", requestURI);
-        filterChain.doFilter(request, response);
+        log.warn("Invalid JWT for request to {}", requestURI);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         return;
       }
-      
-      // Use the correct method from your JwtService - extractUsername instead of extractEmail
-      String username = jwtService.extractUsername(token);
-      if (username == null) {
-        log.debug("Could not extract username from token for request to {}", requestURI);
-        filterChain.doFilter(request, response);
+
+      String email = jwtService.extractEmail(token);
+
+      if (email == null || email.isBlank()) {
+        log.warn("Empty email in JWT for request to {}", requestURI);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         return;
       }
-      
-      // Only set authentication if not already set
+
       if (SecurityContextHolder.getContext().getAuthentication() == null) {
-        UserDetails userDetails = userService.loadUserByUsername(username);
-        
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            userDetails, null, Optional.ofNullable(userDetails)
-                .map(UserDetails::getAuthorities).orElse(List.of()));
-                
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.debug("Authentication set for user {} for request to {}", username, requestURI);
+        Set<RoleEntity> roles = jwtService.extractRoles(token);
+        Collection<GrantedAuthority> authorities = extractAuthorities(roles);
+
+        var user = new AccountEntity();
+        user.setId(jwtService.extractUserId(token));
+        user.setUsername(jwtService.extractUsername(token));
+        user.setEmail(jwtService.extractEmail(token));
+        user.setEmailVerifiedAt(jwtService.extractMailVerifiedAt(token));
+        user.setRoles(roles);
+
+        var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
+        auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        log.info("Authenticated '{}' for {}", email, requestURI);
       }
-    } catch (Exception e) {
-      log.error("Authentication error for request to {}: {}", requestURI, e.getMessage());
+
+      filterChain.doFilter(request, response);
+    } catch (Exception ex) {
+      log.error("Error in JwtFilter for {}: {}", requestURI, ex.getMessage(), ex);
+      response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
-    
-    filterChain.doFilter(request, response);
+  }
+
+  private Collection<GrantedAuthority> extractAuthorities(Set<RoleEntity> roles) {
+    Set<GrantedAuthority> authorities = new HashSet<>();
+
+    Set<GrantedAuthority> roleAuthorities =
+        roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+            .collect(Collectors.toSet());
+    authorities.addAll(roleAuthorities);
+
+    roles.forEach(role -> {
+      Set<GrantedAuthority> permissionAuthorities = role.getPermissions().stream()
+          .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+          .collect(Collectors.toSet());
+      authorities.addAll(permissionAuthorities);
+    });
+
+    return authorities;
   }
 
   private String resolveToken(HttpServletRequest request) {
-    String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7);
+    Cookie[] cookies = request.getCookies();
+    if (cookies == null) {
+      return null;
+    }
+
+    for (Cookie cookie : cookies) {
+      if (cookie.getName().equals("jwt")) {
+        return cookie.getValue();
+      }
     }
     return null;
   }

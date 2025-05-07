@@ -1,7 +1,6 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import com.dantesoft.siremono.internal.actions.ActionInputContract;
-
+import com.dantesoft.siremono.internal.commands.CommandInput;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResetPasswordInput implements ActionInputContract {
+public class ResetPasswordInput implements CommandInput {
 
   @NotBlank(message = "El password es requerido")
   @Size(min = 8, message = "El mínimo de caracteres es 8")
@@ -25,6 +24,6 @@ public class ResetPasswordInput implements ActionInputContract {
   private String token;
 
   public boolean isPasswordMatch() {
-    return this.password.equals(passwordConfirmation);
+    return password.equals(passwordConfirmation);
   }
 }

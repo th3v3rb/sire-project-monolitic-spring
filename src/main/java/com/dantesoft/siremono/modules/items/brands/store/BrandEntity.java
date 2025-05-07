@@ -1,11 +1,6 @@
 package com.dantesoft.siremono.modules.items.brands.store;
 
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import com.dantesoft.siremono.internal.AbstractEntity;
+import com.dantesoft.siremono.internal.database.AbstractEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -19,9 +14,4 @@ import lombok.Setter;
 public class BrandEntity extends AbstractEntity {
   private String name;
   private boolean enabled;
-  @CreationTimestamp
-  private LocalDateTime createdAt;
-  @UpdateTimestamp
-  private LocalDateTime updatedAt;
-
 }

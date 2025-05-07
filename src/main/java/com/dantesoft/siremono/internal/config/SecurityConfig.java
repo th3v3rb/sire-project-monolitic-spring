@@ -1,7 +1,6 @@
 package com.dantesoft.siremono.internal.config;
 
 import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -20,10 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import com.dantesoft.siremono.internal.filters.JwtFilter;
-import com.dantesoft.siremono.modules.auth.store.services.CustomUserDetailsService;
-
+import com.dantesoft.siremono.modules.auth.store.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -32,33 +29,28 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
   private final JwtFilter jwtFilter;
   private final CustomUserDetailsService userDetailsServiceImp;
+  private final AppProperties app;
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.csrf(AbstractHttpConfigurer::disable)
-        .cors(c -> c.configurationSource(corsConfigurationSource()))
-        .sessionManagement(
-            session -> session.sessionCreationPolicy(
-                SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(
-            req -> req.requestMatchers(
-                "/docs.html", "/swagger-ui/index.html", "/swagger-ui/**",
-                "/v3/api-docs/**", "/api/v1/auth/register",
-                "/api/v1/auth/login", "/api/v1/auth/forgot-password",
-                "/api/v1/auth/reset-password/**", "/actuator/**", "/sql/**",
-                "/sql**").permitAll().anyRequest().authenticated())
-        .userDetailsService(userDetailsServiceImp)
-        .exceptionHandling(
-            e -> e
-                .accessDeniedHandler(
-                    (_, response, _) -> response
-                        .setStatus(HttpStatus.FORBIDDEN.value()))
-                .authenticationEntryPoint(
-                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-        .logout(AbstractHttpConfigurer::disable)
-        .formLogin(AbstractHttpConfigurer::disable)
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-        .headers(h -> h.frameOptions(FrameOptionsConfig::disable)).build();
+    //@formatter:off
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(
+                        req -> 
+                        req
+                        .requestMatchers(app.getWhiteListedEndpoints()).permitAll()
+                        .anyRequest().authenticated())
+                .userDetailsService(userDetailsServiceImp)
+                .exceptionHandling(
+                        e -> e.accessDeniedHandler((_, response, _) -> response.setStatus(HttpStatus.FORBIDDEN.value()))
+                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .logout(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(h -> h.frameOptions(FrameOptionsConfig::disable)).build();
+        //@formatter:on
   }
 
   @Bean
@@ -67,8 +59,8 @@ public class SecurityConfig {
   }
 
   @Bean
-  AuthenticationManager authenticationManager(
-      AuthenticationConfiguration configuration) throws Exception {
+  AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+      throws Exception {
     return configuration.getAuthenticationManager();
   }
 
@@ -76,14 +68,11 @@ public class SecurityConfig {
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-    configuration
-        .setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
-
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
-
     return source;
   }
 }

@@ -1,5 +1,7 @@
+debug: false
 server:
   port: 8000
+
 springdoc:
   api-docs:
     enabled: true
@@ -24,14 +26,17 @@ spring:
     password: gitea
     driver-class-name: org.postgresql.Driver
   jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 50
     show-sql: true
     hibernate:
       ddl-auto: update
       format_sql: true
-      use_sql_comments: true
-      generate_statistics: true
+      use_sql_comments: false
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: false
   thymeleaf:
     enabled: true
     cache: false
@@ -49,30 +54,34 @@ spring:
           auth: true
           starttls:
             enable: true
-management:
-  endpoints:
-    web:
-      base-path: "/actuator"
-      exposure:
-        include: "*"
-    jmx:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: "always"
-    beans:
-      access: unrestricted
-      
-#internal use
+
 internal:
-  app:
-    front:
-      email-verification-url: "http://localhost:4200/auth/verify-email?token=%s"
-      password-reset-url: "http://localhost:4200/auth/new-password?token=%s"
-    token:
-      expiration: 864000 
+  front:
+    email-verification-url: "http://localhost:4200/auth/verify-email?token=%s"
+    password-reset-url: "http://localhost:4200/auth/new-password?token=%s"
+  whitelisted-endpoints:
+    # Documentación y Swagger
+    - "/docs.html"
+    - "/swagger-ui/index.html"
+    - "/swagger-ui/**"
+    - "/v3/api-docs/**"
+
+    # Autenticación y registro
+    - "/api/v1/auth/logout"
+    - "/api/v1/auth/register"
+    - "/api/v1/auth/login"
+    - "/api/v1/auth/verification-email"
+    - "/api/v1/auth/verify-email"
+    - "/api/v1/auth/forgot-password"
+    - "/api/v1/auth/reset-password/**"
+
+    # Actuator y SQL
   jwt:
     secret: 5f7654317a372c237c67662359776f767a3e3b3e7971482f5878354e5d
-    expiration: 8640000  
-    
+    expiration: 8640000
+  storage:
+    endpoint: http://debian:9000
+    access-key: KNwdbi0yGWzLkpPXlfKw
+    secret-key: 0OVsg1V5lexoqaJPwEytCdl4m11Y0X5EZlCySqLD
+    items-bucket: items-images
+    profile-images-bucket: profile-images

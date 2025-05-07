@@ -1,21 +1,21 @@
 {
 	"folders": {},
 	"connections": {
-		"postgres-jdbc-195d4fa5f6f-b3bd8b486a7962d": {
+		"postgres-jdbc-1966a446839-7ee70920e76df1dc": {
 			"provider": "postgresql",
 			"driver": "postgres-jdbc",
-			"name": "debian",
+			"name": "sire",
 			"save-password": true,
 			"configuration": {
 				"host": "debian",
 				"port": "5432",
-				"url": "jdbc:postgresql://debian:5432/",
+				"database": "sire",
+				"url": "jdbc:postgresql://debian:5432/sire",
 				"configurationType": "MANUAL",
-				"home": "postgresql_client",
 				"type": "dev",
 				"closeIdleConnection": true,
 				"provider-properties": {
-					"@dbeaver-show-non-default-db@": "true",
+					"@dbeaver-show-non-default-db@": "false",
 					"@dbeaver-chosen-role@": ""
 				},
 				"auth-model": "native"

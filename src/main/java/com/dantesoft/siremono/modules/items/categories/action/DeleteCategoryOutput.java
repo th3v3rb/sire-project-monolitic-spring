@@ -1,10 +1,11 @@
 package com.dantesoft.siremono.modules.items.categories.action;
 
-import com.dantesoft.siremono.internal.actions.ActionOutputContract;
+import com.dantesoft.siremono.internal.commands.CommandOutput;
+import lombok.Getter;
+import lombok.Setter;
 
-import lombok.Data;
-
-@Data
-public class DeleteCategoryOutput implements ActionOutputContract {
-
+@Getter
+@Setter
+public class DeleteCategoryOutput implements CommandOutput {
+	// no output
 }

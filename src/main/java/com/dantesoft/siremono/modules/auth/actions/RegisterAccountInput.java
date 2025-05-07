@@ -1,7 +1,6 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import com.dantesoft.siremono.internal.actions.ActionInputContract;
-
+import com.dantesoft.siremono.internal.commands.CommandInput;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterAccountInput implements ActionInputContract {
+public class RegisterAccountInput implements CommandInput {
   @NotBlank(message = "El nombre de usuario es necesario")
   public String username;
 

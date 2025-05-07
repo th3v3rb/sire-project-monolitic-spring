@@ -1,7 +1,6 @@
 package com.dantesoft.siremono.modules.items.categories.store;
 
-import com.dantesoft.siremono.internal.AbstractEntity;
-
+import com.dantesoft.siremono.internal.database.AbstractEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;

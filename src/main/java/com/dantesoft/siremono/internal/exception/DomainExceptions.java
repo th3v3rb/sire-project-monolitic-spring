@@ -6,42 +6,50 @@ import lombok.Getter;
 
 public interface DomainExceptions {
 
-  @Getter
-  abstract class HttpException extends RuntimeException {
-    private final HttpStatus status;
+	@Getter
+	abstract class HttpException extends RuntimeException {
+		private final HttpStatus status;
 
-    protected HttpException(String message, HttpStatus status) {
-      super(message);
-      this.status = status;
-    }
-  }
+		protected HttpException(String message, HttpStatus status) {
+			super(message);
+			this.status = status;
+		}
+	}
 
-  @Getter
-  abstract class NotFoundException extends HttpException {
-    protected NotFoundException(String message) {
-      super(message, HttpStatus.NOT_FOUND);
-    }
-  }
+	@Getter
+	abstract class NotFoundException extends HttpException {
+		protected NotFoundException(String message) {
+			super(message, HttpStatus.NOT_FOUND);
+		}
+	}
 
-  @Getter
-  abstract class ConflictException extends HttpException {
-    protected ConflictException(String message) {
-      super(message, HttpStatus.CONFLICT);
-    }
-  }
+	@Getter
+	abstract class ConflictException extends HttpException {
+		protected ConflictException(String message) {
+			super(message, HttpStatus.CONFLICT);
+		}
+	}
 
-  @Getter
-  abstract class ValidationException extends HttpException {
+	@Getter
+	abstract class ValidationException extends HttpException {
 
-    protected ValidationException(String message) {
-      super(message, HttpStatus.BAD_REQUEST);
-    }
-  }
+		protected ValidationException(String message) {
+			super(message, HttpStatus.BAD_REQUEST);
+		}
+	}
 
-  @Getter
-  abstract class OperationException extends HttpException {
-    protected OperationException(String message) {
-      super(message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
+	@Getter
+	abstract class OperationException extends HttpException {
+		protected OperationException(String message) {
+			super(message, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Getter
+	abstract class UnauthorizedException extends RuntimeException {
+		public UnauthorizedException(String message) {
+			super(message);
+		}
+	}
+
 }

@@ -1,14 +1,12 @@
 package com.dantesoft.siremono.modules.items.categories.action;
 
 import java.util.UUID;
-
-import com.dantesoft.siremono.internal.actions.ActionInputContract;
-
+import com.dantesoft.siremono.internal.commands.CommandInput;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class DeleteCategoryInput implements ActionInputContract {
+public class DeleteCategoryInput implements CommandInput {
   private UUID id;
 }

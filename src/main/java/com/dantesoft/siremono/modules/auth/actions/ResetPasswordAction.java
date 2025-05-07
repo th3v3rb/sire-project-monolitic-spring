@@ -1,47 +1,42 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
+import org.springframework.security.authentication.ott.OneTimeTokenAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
-import com.dantesoft.siremono.internal.actions.AbstractAction;
+import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.modules.auth.AuthErrors.ValidationException;
-import com.dantesoft.siremono.modules.auth.store.services.AccountTokenService;
-import com.dantesoft.siremono.modules.auth.store.services.AuthService;
-
+import com.dantesoft.siremono.modules.auth.store.OTTService;
+import com.dantesoft.siremono.modules.auth.store.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class ResetPasswordAction extends AbstractAction<ResetPasswordInput, ResetPasswordOutput> {
+public class ResetPasswordAction extends AbstractCommand<ResetPasswordInput, ResetPasswordOutput> {
 
-  private final AccountTokenService accountTokenService;
-  private final AuthService authService;
+  private final OTTService ottService;
+  private final AccountService authService;
   private final PasswordEncoder passwordEncoder;
 
   @Override
   public ResetPasswordOutput doExecute() {
     if (!getInput().isPasswordMatch()) {
-      throw new ValidationException("Los passwords no coinciden");
+      throw new ValidationException("The passwords doesnt match");
     }
 
-    if (accountTokenService.isTokenExpired(getInput().getToken())) {
-      accountTokenService.invalidateToken(getInput().getToken());
-      throw new ValidationException("El token ha expirado");
-    }
+    var token = OneTimeTokenAuthenticationToken.unauthenticated(getInput().getToken());
+    ottService.consume(token);
 
-    var user = accountTokenService.getUserByToken(getInput().getToken());
-    user.setPassword(passwordEncoder.encode(getInput().getPassword()));
-    authService.save(user);
+    var email = token.getName();
+    var user = authService.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
-    log.info(
-        "User with email {} has successfully reset their password",
-        user.getEmail());
+    var encoded = passwordEncoder.encode(getInput().getPassword());
+    user.setPassword(encoded);
 
     var output = new ResetPasswordOutput();
     output.setMessage("Password reset success");
-    return output;
+    return new ResetPasswordOutput();
   }
 
 }

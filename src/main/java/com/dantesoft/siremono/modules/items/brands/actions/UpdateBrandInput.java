@@ -1,9 +1,7 @@
 package com.dantesoft.siremono.modules.items.brands.actions;
 
 import java.util.UUID;
-
-import com.dantesoft.siremono.internal.actions.ActionInputContract;
-
+import com.dantesoft.siremono.internal.commands.CommandInput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -13,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Schema(name = "Update brand input", description = "Data to update a brand")
-public class UpdateBrandInput implements ActionInputContract {
+public class UpdateBrandInput implements CommandInput {
 
   @Schema(
       hidden = true,

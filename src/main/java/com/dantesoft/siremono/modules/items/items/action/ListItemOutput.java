@@ -1,15 +1,10 @@
 package com.dantesoft.siremono.modules.items.items.action;
 
 import org.springframework.data.domain.Page;
+import com.dantesoft.siremono.internal.commands.AbstractOutput;
+import com.dantesoft.siremono.modules.items.items.store.views.ItemDTO;
 
-import com.dantesoft.siremono.internal.actions.ActionOutputContract;
-import com.dantesoft.siremono.modules.items.items.store.ItemEntity;
+public class ListItemOutput extends AbstractOutput<Page<ItemDTO>> {
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-public class ListItemOutput implements ActionOutputContract {
-  private Page<ItemEntity> output;
 }
+

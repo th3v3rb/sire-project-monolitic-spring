@@ -1,17 +1,13 @@
 package com.dantesoft.siremono.modules.items.categories.action;
 
-import org.springframework.stereotype.Component;
-
-import com.dantesoft.siremono.internal.actions.AbstractAction;
+import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.modules.items.categories.store.CategoryService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class EnableCategoryAction extends AbstractAction<EnableCategoryInput, EnableCategoryOutput> {
+public class EnableCategoryAction extends AbstractCommand<EnableCategoryInput, EnableCategoryOutput> {
   private final CategoryService service;
 
   @Override
@@ -23,7 +19,7 @@ public class EnableCategoryAction extends AbstractAction<EnableCategoryInput, En
     category.setEnabled(true);
     var enabledCategory = service.save(category);
 
-    out.setData(enabledCategory);
+    out.setPayload(enabledCategory);
     return out;
   }
 

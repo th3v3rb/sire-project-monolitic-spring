@@ -1,7 +1,6 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import com.dantesoft.siremono.internal.actions.ActionInputContract;
-
+import com.dantesoft.siremono.internal.commands.CommandInput;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SendVerificationEmailInput implements ActionInputContract {
+public class SendVerificationEmailInput implements CommandInput {
   @NotEmpty(message = "El email no puede estar vacio")
   @NotBlank(message = "El email es requerido")
   @Email(message = "El formato proveido debe ser un correo")

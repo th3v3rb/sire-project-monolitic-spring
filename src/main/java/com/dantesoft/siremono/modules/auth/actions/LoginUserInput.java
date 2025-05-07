@@ -1,7 +1,6 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import com.dantesoft.siremono.internal.actions.ActionInputContract;
-
+import com.dantesoft.siremono.internal.commands.CommandInput;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginUserInput implements ActionInputContract {
+public class LoginUserInput implements CommandInput {
   @NotBlank(message = "The email its required")
   public String email;
 

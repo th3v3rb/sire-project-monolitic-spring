@@ -1,26 +1,22 @@
 package com.dantesoft.siremono.modules.people.people.actions;
 
-import org.springframework.stereotype.Component;
-
-import com.dantesoft.siremono.internal.actions.AbstractAction;
-import com.dantesoft.siremono.internal.actions.ActionHandler;
+import com.dantesoft.siremono.internal.commands.AbstractCommand;
+import com.dantesoft.siremono.internal.commands.CommandExecutor;
 import com.dantesoft.siremono.modules.people.contacts.actions.AttachContactAction;
 import com.dantesoft.siremono.modules.people.document_types.store.DocumentTypeEntity;
 import com.dantesoft.siremono.modules.people.document_types.store.DocumentTypeService;
 import com.dantesoft.siremono.modules.people.people.PeopleErrors;
 import com.dantesoft.siremono.modules.people.people.store.PersonEntity;
 import com.dantesoft.siremono.modules.people.people.store.PersonService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class PersonSaveAction extends AbstractAction<PersonSaveInput, PersonSaveOutput> {
+public class PersonSaveAction extends AbstractCommand<PersonSaveInput, PersonSaveOutput> {
   private final PersonService personService;
   private final DocumentTypeService documentTypeService;
-  private final ActionHandler handler;
+  private final CommandExecutor handler;
 
   @Override
   public PersonSaveOutput doExecute() {

@@ -2,7 +2,6 @@ package com.dantesoft.siremono.modules.items.categories.store;
 
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,5 +23,6 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> 
   @Modifying
   @Transactional
   @Query("DELETE FROM CategoryEntity b WHERE b.id IN :ids")
-  int deleteAllByIds(@Param("ids") List<UUID> ids);
+  void deleteAllByIds(@Param("ids") List<UUID> ids);
+
 }

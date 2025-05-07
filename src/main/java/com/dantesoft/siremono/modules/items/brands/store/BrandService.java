@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.dantesoft.siremono.modules.items.brands.BrandErrors;
@@ -16,55 +15,34 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class BrandService {
-  private final BrandRepository brandRepo;
+	private final BrandRepository brandRepo;
 
-  public BrandEntity findByIdOrFail(UUID id) {
-    return brandRepo.findById(id)
-        .orElseThrow(() -> new BrandErrors.NotFoundException(id));
-  }
+	public BrandEntity findByIdOrFail(UUID id) {
+		return brandRepo.findById(id).orElseThrow(() -> new BrandErrors.NotFoundException(id));
+	}
 
-  public Page<BrandEntity> searchBrands(
-      String search,
-      Boolean status,
-      Pageable pageable) {
-    Specification<BrandEntity> spec = Specification.where(null);
+	public Page<BrandEntity> searchBrands(String search, Pageable pageable) {
+		return brandRepo.findByNameContainingIgnoreCase(search, pageable);
+	}
 
-    // Add name search criteria if search parameter is provided
-    if (search != null && !search.trim().isEmpty()) {
-      spec = spec.and((root, _, builder) -> {
-        var like = builder.like(
-            builder.lower(root.get("name")), "%" + search.toLowerCase() + "%");
-        return like;
-      });
-    }
+	public void updateStatusWhereAllInIds(List<UUID> list, boolean status) {
+		brandRepo.updateStatusByIds(list, status);
+	}
 
-    // Add status filter if status parameter is provided
-    if (status != null) {
-      spec = spec.and(
-          (root, _, builder) -> builder.equal(root.get("enabled"), status));
-    }
+	public void deleteWhereAllInIds(List<UUID> list) {
+		brandRepo.deleteAllByIds(list);
+	}
 
-    return brandRepo.findAll(spec, pageable);
-  }
+	public BrandEntity save(BrandEntity brand) {
+		return this.brandRepo.save(brand);
+	}
 
-  public int updateStatusWhereAllInIds(List<UUID> list, boolean status) {
-    return brandRepo.updateStatusByIds(list, status);
-  }
+	public Optional<BrandEntity> findById(UUID id) {
+		return this.brandRepo.findById(id);
+	}
 
-  public int deleteWhereAllInIds(List<UUID> list) {
-    return brandRepo.deleteAllByIds(list);
-  }
-
-  public BrandEntity save(BrandEntity brand) {
-    return this.brandRepo.save(brand);
-  }
-
-  public Optional<BrandEntity> findById(UUID id) {
-    return this.brandRepo.findById(id);
-  }
-
-  public void delete(BrandEntity brand) {
-    brandRepo.delete(brand);
-  }
+	public void delete(BrandEntity brand) {
+		brandRepo.delete(brand);
+	}
 
 }

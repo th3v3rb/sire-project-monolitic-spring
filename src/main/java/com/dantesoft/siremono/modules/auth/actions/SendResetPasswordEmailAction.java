@@ -1,66 +1,53 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.authentication.ott.GenerateOneTimeTokenRequest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
-import com.dantesoft.siremono.connectors.email.Email;
-import com.dantesoft.siremono.connectors.email.EmailPublisher;
-import com.dantesoft.siremono.internal.actions.AbstractAction;
-import com.dantesoft.siremono.modules.auth.store.services.AccountTokenService;
-import com.dantesoft.siremono.modules.auth.store.services.AuthService;
-
-import io.jsonwebtoken.lang.Collections;
+import com.dantesoft.siremono.connectors.email.DefaultEmailPublisher;
+import com.dantesoft.siremono.connectors.email.dto.Email;
+import com.dantesoft.siremono.internal.commands.AbstractCommand;
+import com.dantesoft.siremono.internal.config.AppProperties;
+import com.dantesoft.siremono.modules.auth.store.OTTService;
+import com.dantesoft.siremono.modules.auth.store.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class SendResetPasswordEmailAction extends AbstractAction<SendResetPasswordEmailInput, SendResetPasswordEmailOutput> {
+public class SendResetPasswordEmailAction
+    extends AbstractCommand<SendResetPasswordEmailInput, SendResetPasswordEmailOutput> {
 
-  @Value("${internal.app.front.password-reset-url}")
-  private String passwordResetUrl;
-
-  private final AccountTokenService accountTokenService;
-  private final EmailPublisher emailPublisher;
+  private final AppProperties appProperties;
+  private final OTTService ottService;
+  private final DefaultEmailPublisher mailAdapter;
   private final TemplateEngine templateEngine;
-  private final AuthService authService;
+  private final AccountService userService;
 
   @Override
   public SendResetPasswordEmailOutput doExecute() {
-    var user = authService.findByEmail(getInput().getEmail()).orElseThrow(
-        () -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND, "User not found"));
-    var resetToken = accountTokenService
-        .generateEmailVerificationToken(user.getId());
+    var user = userService.findByEmail(getInput().getEmail())
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    var resetToken = ottService.generate(new GenerateOneTimeTokenRequest(user.getUsername()));
 
-    var emailResetPasswordLink = String.format(passwordResetUrl, resetToken);
-    var emailContent = generateEmailContent(
-        user.getUsername(), emailResetPasswordLink);
+    var emailResetPasswordLink =
+        String.format(appProperties.getFront().passwordResetUrl(), resetToken);
+    var emailContent = generateEmailContent(user.getUsername(), emailResetPasswordLink);
 
     var email = new Email();
-    email.setBody(emailContent);
     email.setSubject("Reset Your Password");
     email.setTo(user.getEmail());
-    email.setCc(Collections.emptyList());
-    email.setBcc(Collections.emptyList());
-    email.setAttachments(Collections.emptyList());
+    email.setBody(emailContent);
 
-    this.emailPublisher.send(email);
+    mailAdapter.send(email);
 
     var output = new SendResetPasswordEmailOutput();
-    output.setMessage("Por favor, queda atento a tu bandeja de correo");
-    return output;
+    output.setMessage("Please see your mail inbox");
+    return new SendResetPasswordEmailOutput();
   }
 
-  private String generateEmailContent(
-      String username,
-      String emailResetPasswordLink) {
-    Context context = new Context();
+  private String generateEmailContent(String username, String emailResetPasswordLink) {
+    var context = new Context();
     context.setVariable("username", username);
     context.setVariable("passwordResetLink", emailResetPasswordLink);
 

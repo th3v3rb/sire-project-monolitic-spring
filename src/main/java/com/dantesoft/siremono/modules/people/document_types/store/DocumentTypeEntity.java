@@ -2,7 +2,7 @@ package com.dantesoft.siremono.modules.people.document_types.store;
 
 import java.util.UUID;
 
-import com.dantesoft.siremono.internal.AbstractEntity;
+import com.dantesoft.siremono.internal.database.AbstractEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

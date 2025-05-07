@@ -3,48 +3,55 @@ package com.dantesoft.siremono.modules.auth.actions;
 import java.util.Set;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-import com.dantesoft.siremono.internal.actions.AbstractAction;
+import com.dantesoft.siremono.internal.commands.AbstractCommand;
+import com.dantesoft.siremono.internal.commands.CommandExecutor;
+import com.dantesoft.siremono.internal.events.DomainEventPublisher;
 import com.dantesoft.siremono.modules.auth.AuthErrors.ValidationException;
-import com.dantesoft.siremono.modules.auth.store.entity.User;
-import com.dantesoft.siremono.modules.auth.store.services.AuthService;
-import com.dantesoft.siremono.modules.auth.store.services.JwtService;
-import com.dantesoft.siremono.modules.auth.store.services.RoleService;
+import com.dantesoft.siremono.modules.auth.events.UserRegisteredEvent;
+import com.dantesoft.siremono.modules.auth.store.RoleService;
+import com.dantesoft.siremono.modules.auth.store.AccountService;
+import com.dantesoft.siremono.modules.auth.store.entity.AccountEntity;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@Component
 @RequiredArgsConstructor
-public class RegisterAccountAction extends AbstractAction<RegisterAccountInput, RegisterAccountOutput> {
+public class RegisterAccountAction extends AbstractCommand<RegisterAccountInput, RegisterAccountOutput> {
+	private final CommandExecutor handler;
+	private final PasswordEncoder passwordEncoder;
+	private final AccountService authService;
+	private final RoleService roleService;
+	private final DomainEventPublisher domainEventPublisher;
 
-  private final PasswordEncoder passwordEncoder;
-  private final AuthService authService;
-  private final RoleService roleService;
-  private final JwtService tokenService;
+	@Override
+	public RegisterAccountOutput doExecute() {
+		if (!getInput().passwordsMatch()) {
+			throw new ValidationException("The password doenst match");
+		}
 
-  @Override
-  public RegisterAccountOutput doExecute() {
-    if (!getInput().passwordsMatch()) {
-      throw new ValidationException("The password doenst match");
-    }
+		if (authService.findByEmail(getInput().getEmail()).isPresent()) {
+			throw new ValidationException("The email already has been taken");
+		}
 
-    if (authService.findByEmail(getInput().getEmail()).isPresent()) {
-      throw new ValidationException("The email already has been taken");
-    }
+		var user = new AccountEntity();
+		user.setUsername(getInput().getUsername());
+		user.setPassword(passwordEncoder.encode(getInput().getPassword()));
+		user.setRoles(Set.of(roleService.getRoleByName("GUEST")));
+		user.setEmail(getInput().getEmail());
+		user.setEnabled(true);
+		authService.save(user);
 
-    var user = new User();
-    user.setUsername(getInput().getUsername());
-    user.setPassword(passwordEncoder.encode(getInput().getPassword()));
-    user.setRoles(Set.of(roleService.getRoleByName("GUEST")));
-    user.setEmail(getInput().getEmail());
-    user.setEnabled(true);
-    var savedUser = authService.save(user);
+		handleSendEmailVerification();
 
-    var out = new RegisterAccountOutput();
-    out.setToken(this.tokenService.generateToken(savedUser));
-    return out;
-  }
+		domainEventPublisher.publish(new UserRegisteredEvent(user));
+
+		return null;
+	}
+
+	private void handleSendEmailVerification() {
+		var input = new SendVerificationEmailInput();
+		input.setEmail(getInput().getEmail());
+
+		handler.executeAsync(SendVerificationEmailAction.class, input);
+	}
 }

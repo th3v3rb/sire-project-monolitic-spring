@@ -1,8 +1,6 @@
 package com.dantesoft.siremono.modules.people.contacts.actions;
 
-import org.springframework.stereotype.Component;
-
-import com.dantesoft.siremono.internal.actions.AbstractAction;
+import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.modules.people.contacts.ContactErrors;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactEntity;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactService;
@@ -11,14 +9,12 @@ import com.dantesoft.siremono.modules.people.contacts.store.ContactTypeService;
 import com.dantesoft.siremono.modules.people.people.PeopleErrors;
 import com.dantesoft.siremono.modules.people.people.store.PersonEntity;
 import com.dantesoft.siremono.modules.people.people.store.PersonService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class AttachContactAction extends AbstractAction<AttachContactInput, AttachContactOutput> {
+public class AttachContactAction extends AbstractCommand<AttachContactInput, AttachContactOutput> {
   private final ContactService contactService;
   private final ContactTypeService contactTypeService;
   private final PersonService personService;

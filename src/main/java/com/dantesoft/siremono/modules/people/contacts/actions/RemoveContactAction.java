@@ -1,19 +1,15 @@
 package com.dantesoft.siremono.modules.people.contacts.actions;
 
-import org.springframework.stereotype.Component;
-
-import com.dantesoft.siremono.internal.actions.AbstractAction;
+import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.modules.people.contacts.ContactErrors;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactEntity;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-public class RemoveContactAction extends AbstractAction<RemoveContactInput, RemoveContactOutput> {
+public class RemoveContactAction extends AbstractCommand<RemoveContactInput, RemoveContactOutput> {
   private final ContactService contactService;
 
   @Override

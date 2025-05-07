@@ -3,20 +3,17 @@ package com.dantesoft.siremono.modules.items.categories.store;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import com.dantesoft.siremono.modules.items.categories.CategoryErrors;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
   private final CategoryRepository repository;
-
+  
   public CategoryEntity findByIdOrFail(UUID id) {
     return repository.findById(id)
         .orElseThrow(() -> new CategoryErrors.NotFoundException(id));
@@ -26,7 +23,7 @@ public class CategoryService {
     return repository.findAll(pageable);
   }
 
-  public Page<CategoryEntity> allBySearchParam(
+  public Page<CategoryEntity> findByNameContainingIgnoreCase(
       String searchParam,
       Pageable pageable) {
     return repository.findByNameContainingIgnoreCase(searchParam, pageable);
@@ -48,7 +45,7 @@ public class CategoryService {
     return repository.updateActiveStatusByIds(list, status);
   }
 
-  public int deleteWhereAllInIds(List<UUID> list) {
-    return repository.deleteAllByIds(list);
+  public void deleteWhereAllInIds(List<UUID> list) {
+    repository.deleteAllByIds(list);
   }
 }

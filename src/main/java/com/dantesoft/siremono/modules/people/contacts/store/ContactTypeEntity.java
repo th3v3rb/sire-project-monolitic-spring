@@ -1,6 +1,6 @@
 package com.dantesoft.siremono.modules.people.contacts.store;
 
-import com.dantesoft.siremono.internal.AbstractEntity;
+import com.dantesoft.siremono.internal.database.AbstractEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

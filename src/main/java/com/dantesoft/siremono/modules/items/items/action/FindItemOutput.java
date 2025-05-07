@@ -1,13 +1,15 @@
 package com.dantesoft.siremono.modules.items.items.action;
 
-import com.dantesoft.siremono.internal.actions.ActionOutputContract;
+import com.dantesoft.siremono.internal.commands.AbstractOutput;
 import com.dantesoft.siremono.modules.items.items.store.ItemEntity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class FindItemOutput implements ActionOutputContract {
-  private ItemEntity data;
+public class FindItemOutput extends AbstractOutput<ItemEntity> {
+
 }
