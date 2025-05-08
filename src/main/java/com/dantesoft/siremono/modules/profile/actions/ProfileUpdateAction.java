@@ -1,6 +1,7 @@
 package com.dantesoft.siremono.modules.profile.actions;
 
 import static com.dantesoft.siremono.internal.Utils.parseBase64;
+import java.time.LocalDate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.dantesoft.siremono.connectors.upload.UploadAdapter;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
@@ -29,23 +30,23 @@ public class ProfileUpdateAction extends AbstractCommand<ProfileUpdateInput, Pro
 
     mergeProfile(profile, getInput().getProfile());
     mergePreferences(profile.getData(), getInput().getPreferences());
-    
+
     profileService.save(profile);
-    
+
     return null;
   }
 
   private void mergeProfile(ProfileEntity profile, ProfileDTO req) {
-    if(req == null) return ;
-    
+    if (req == null)
+      return;
+
+    profile.setRecentlyCreated(false);
+
     if (req.getProfileImage() != null) {
       var name = upload(profile, req.getProfileImage());
       profile.setProfileImageName(name);
     }
 
-    if (req.getRecentlyCreated() != profile.isRecentlyCreated()) {
-      profile.setRecentlyCreated(req.getRecentlyCreated());
-    }
 
     if (req.getAddress() != null) {
       profile.setAddress(req.getAddress());
@@ -56,8 +57,11 @@ public class ProfileUpdateAction extends AbstractCommand<ProfileUpdateInput, Pro
     }
 
     if (req.getBirthDate() != null) {
-      profile.setBio(req.getBio());
-    }
+      String isoDate = req.getBirthDate().substring(0, 10); 
+      LocalDate birthDate = LocalDate.parse(isoDate);
+      profile.setBirthDay(birthDate);
+  }
+
 
     if (req.getFullName() != null) {
       profile.setFullName(req.getFullName());
@@ -71,8 +75,9 @@ public class ProfileUpdateAction extends AbstractCommand<ProfileUpdateInput, Pro
 
 
   private void mergePreferences(ProfileData data, PreferencesDTO req) {
-    if(req == null) return;
-    
+    if (req == null)
+      return;
+
     if (req.getDarkMode() != data.isDarkMode()) {
       data.setDarkMode(req.getDarkMode());
     }
