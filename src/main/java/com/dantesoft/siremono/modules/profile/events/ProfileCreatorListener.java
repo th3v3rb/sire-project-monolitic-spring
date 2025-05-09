@@ -26,8 +26,12 @@ public class ProfileCreatorListener {
 
 		profile.setUser(user);
 		profile.setRecentlyCreated(true);
-
-		profile.setData(new ProfileData());
+		var data = new ProfileData();
+		data.setMenuMode("static");
+		data.setPreset("Material");
+		data.setPrimary("orange");
+		
+    profile.setData(data);
 
 		service.save(profile);
 	}

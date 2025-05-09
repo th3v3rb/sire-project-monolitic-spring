@@ -6,7 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PreferencesDTO {
-  private Boolean darkMode;
+  private String menuMode;
+  private Boolean darkTheme;
   private String surface;
   private String preset;
   private String primary;

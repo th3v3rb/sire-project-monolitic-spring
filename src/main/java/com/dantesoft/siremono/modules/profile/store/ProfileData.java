@@ -6,7 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProfileData {
-  private boolean darkMode;
+  private String menuMode;
+  private boolean darkTheme;
   private String surface;
   private String preset;
   private String primary;

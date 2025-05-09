@@ -85,10 +85,11 @@ public class ProfileFindAction extends AbstractCommand<ProfileFindInput, Profile
 
   private PreferencesDTO makePreferences(ProfileData data) {
     var preferences = new PreferencesDTO();
-    preferences.setDarkMode(data.isDarkMode());
+    preferences.setDarkTheme(data.isDarkTheme());
     preferences.setPreset(data.getPreset());
     preferences.setPrimary(data.getPrimary());
     preferences.setSurface(data.getSurface());
+    preferences.setMenuMode(data.getMenuMode());
     return preferences;
   }
 }

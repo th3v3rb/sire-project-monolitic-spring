@@ -69,7 +69,7 @@ public class AccountEntity extends AbstractEntity implements UserDetails {
   public boolean isAccountNonLocked() {
     return accountLockedAt == null;
   }
-
+  
   @Override
   public boolean isCredentialsNonExpired() {
     return credentialsExpiredAt == null || credentialsExpiredAt.isAfter(LocalDateTime.now());

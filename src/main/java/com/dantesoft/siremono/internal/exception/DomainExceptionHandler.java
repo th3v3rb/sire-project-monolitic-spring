@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
-
 import com.dantesoft.siremono.internal.exception.DomainExceptions.UnauthorizedException;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,6 +53,12 @@ public class DomainExceptionHandler {
 		return ResponseEntity.status(status).body(new ErrorResponse(LocalDateTime.now(), status.value(),
 				status.getReasonPhrase(), ex.getMessage(), getRequestPath(request)));
 	}
+	
+	private ResponseEntity<ErrorResponse> buildErrorResponse(RuntimeException ex, HttpStatus status,
+      WebRequest request) {
+    return ResponseEntity.status(status).body(new ErrorResponse(LocalDateTime.now(), status.value(),
+        status.getReasonPhrase(), ex.getMessage(), getRequestPath(request)));
+  }
 
 	private String getRequestPath(WebRequest request) {
 		return request.getDescription(false).replace("uri=", "");
@@ -64,6 +67,11 @@ public class DomainExceptionHandler {
 	@ExceptionHandler(DomainExceptions.HttpException.class)
 	public ResponseEntity<ErrorResponse> handleHttpException(DomainExceptions.HttpException ex, WebRequest request) {
 		return buildErrorResponse(ex, ex.getStatus(), request);
+	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+	  return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request);
 	}
 
 	@ExceptionHandler(DomainExceptions.NotFoundException.class)

@@ -47,7 +47,6 @@ public class ProfileUpdateAction extends AbstractCommand<ProfileUpdateInput, Pro
       profile.setProfileImageName(name);
     }
 
-
     if (req.getAddress() != null) {
       profile.setAddress(req.getAddress());
     }
@@ -78,8 +77,8 @@ public class ProfileUpdateAction extends AbstractCommand<ProfileUpdateInput, Pro
     if (req == null)
       return;
 
-    if (req.getDarkMode() != data.isDarkMode()) {
-      data.setDarkMode(req.getDarkMode());
+    if (req.getDarkTheme() != data.isDarkTheme()) {
+      data.setDarkTheme(req.getDarkTheme());
     }
     if (req.getPreset() != null) {
       data.setPreset(req.getPreset());
@@ -89,6 +88,9 @@ public class ProfileUpdateAction extends AbstractCommand<ProfileUpdateInput, Pro
     }
     if (req.getSurface() != null) {
       data.setSurface(req.getSurface());
+    }
+    if(req.getMenuMode() != null) {
+      data.setMenuMode(req.getMenuMode());
     }
   }
 
