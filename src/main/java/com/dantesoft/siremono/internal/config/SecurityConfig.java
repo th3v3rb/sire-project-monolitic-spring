@@ -46,7 +46,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .userDetailsService(userDetailsServiceImp)
                 .exceptionHandling(
-                        e -> e.accessDeniedHandler((_, response, _) -> response.setStatus(HttpStatus.FORBIDDEN.value()))
+                        e -> e.accessDeniedHandler((
+                                req, res, ex)
+                                        -> res.setStatus(HttpStatus.FORBIDDEN.value()))
                                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .logout(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)

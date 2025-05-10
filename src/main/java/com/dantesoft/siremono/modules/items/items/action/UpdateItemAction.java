@@ -34,7 +34,7 @@ public class UpdateItemAction extends AbstractCommand<UpdateItemInput, UpdateIte
   public UpdateItemOutput doExecute() {
     TransactionTemplate tx = new TransactionTemplate(txManager);
 
-    return tx.execute(_ -> {
+    return tx.execute(ignore -> {
       var input = getInput();
       var item = itemService.findByIdOrFail(input.getId());
       var brand = brandService.findByIdOrFail(input.getBrandId());
