@@ -2,6 +2,7 @@ package com.dantesoft.siremono.internal.commands;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -13,31 +14,21 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @Primary
 public class DefaultCommandExecutor implements CommandExecutor {
-    private final CommandFactory commandFactory;
-    
-    @Override
-    public <I extends CommandInput, O extends CommandOutput> O execute(
-            Class<? extends Command<I, O>> actionClass, I input) {
-        try {
-            Command<I, O> actionInstance = commandFactory.getCommand(actionClass);
-            return actionInstance.execute(input);
-        } catch (Exception e) {
-            log.error("Error executing action: {}", actionClass.getName(), e);
-            throw new RuntimeException("Error executing action", e);
-        }
-    }
-    
-    @Async
-    @Override
-    public <I extends CommandInput, O extends CommandOutput> CompletableFuture<O> executeAsync(
-            Class<? extends Command<I, O>> actionClass, I input) {
-        try {
-            Command<I, O> actionInstance = commandFactory.getCommand(actionClass);
-            var out = actionInstance.execute(input);
-            return CompletableFuture.completedFuture(out);
-        } catch (Exception e) {
-            log.error("Error executing action: {}", actionClass.getName(), e);
-            throw new RuntimeException("Error executing async action", e);
-        }
-    }
+  private final ApplicationContext ctx;
+
+  @Override
+  public <I extends CommandInput, O extends CommandOutput> O execute(
+      Class<? extends Command<I, O>> actionClass, I input) {
+    Command<I, O> cmd = ctx.getBean(actionClass);
+    return cmd.execute(input);
+  }
+
+  @Async("commandExecutor")
+  @Override
+  public <I extends CommandInput, O extends CommandOutput> CompletableFuture<O> executeAsync(
+      Class<? extends Command<I, O>> actionClass, I input) {
+    Command<I, O> cmd = ctx.getBean(actionClass);
+    return CompletableFuture.completedFuture(cmd.execute(input));
+  }
+
 }
