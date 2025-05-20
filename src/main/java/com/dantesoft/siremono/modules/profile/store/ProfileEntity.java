@@ -1,19 +1,14 @@
 package com.dantesoft.siremono.modules.profile.store;
 
-import java.time.LocalDate;
-
 import com.dantesoft.siremono.internal.database.AbstractJsonEntity;
 import com.dantesoft.siremono.modules.auth.store.entity.AccountEntity;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter

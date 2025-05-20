@@ -1,6 +1,5 @@
 package com.dantesoft.siremono.modules.profile.actions;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.dantesoft.siremono.connectors.upload.UploadAdapter;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.internal.commands.AbstractOutput;
@@ -17,6 +16,7 @@ import com.dantesoft.siremono.modules.profile.store.dto.ProfileDTO;
 import com.dantesoft.siremono.modules.profile.store.dto.UserInformationDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Slf4j
 @RequiredArgsConstructor

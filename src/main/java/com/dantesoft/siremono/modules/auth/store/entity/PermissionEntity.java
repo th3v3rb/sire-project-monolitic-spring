@@ -1,7 +1,6 @@
 package com.dantesoft.siremono.modules.auth.store.entity;
 
 import com.dantesoft.siremono.internal.database.AbstractEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

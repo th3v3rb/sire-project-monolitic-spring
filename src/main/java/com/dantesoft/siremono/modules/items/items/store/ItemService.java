@@ -1,14 +1,15 @@
 package com.dantesoft.siremono.modules.items.items.store;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.dantesoft.siremono.modules.items.items.store.views.ItemView;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.dantesoft.siremono.modules.items.items.ItemErrors;
-import com.dantesoft.siremono.modules.items.items.store.views.ItemView;
-import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +33,9 @@ public class ItemService {
   }
 
   public ItemEntity findByIdOrFail(UUID id) {
-    return repository.findById(id).orElseThrow(() -> new ItemErrors.NotFoundException(id));
+    return repository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 
   public void delete(ItemEntity item) {

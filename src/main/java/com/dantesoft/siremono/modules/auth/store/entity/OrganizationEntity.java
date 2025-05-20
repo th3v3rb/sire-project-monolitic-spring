@@ -1,10 +1,6 @@
 package com.dantesoft.siremono.modules.auth.store.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.dantesoft.siremono.internal.database.AbstractEntity;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -13,6 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter

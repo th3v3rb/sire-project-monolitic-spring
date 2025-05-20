@@ -1,12 +1,13 @@
 package com.dantesoft.siremono.modules.items.brands.actions;
 
-import java.util.UUID;
 import com.dantesoft.siremono.internal.commands.CommandInput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor

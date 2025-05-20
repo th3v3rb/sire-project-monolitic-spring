@@ -1,10 +1,6 @@
 package com.dantesoft.siremono.modules.items.items.action;
 
 
-import static com.dantesoft.siremono.internal.Utils.parseBase64;
-import java.util.stream.Collectors;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 import com.dantesoft.siremono.connectors.upload.UploadAdapter;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.internal.commands.AbstractOutput;
@@ -17,6 +13,12 @@ import com.dantesoft.siremono.modules.items.items.store.ItemImageService;
 import com.dantesoft.siremono.modules.items.items.store.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import java.util.stream.Collectors;
+
+import static com.dantesoft.siremono.internal.Utils.parseBase64;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,15 +44,14 @@ public class UpdateItemAction extends AbstractCommand<UpdateItemInput, UpdateIte
       item.setName(input.getName());
       item.setDescription(input.getDescription());
       item.setBuyPrice(input.getBuyPrice());
+      item.setStockQuantity(0L);
       item.setSellPrice(input.getSellPrice());
-      item.setStockQuantity(input.getStockQuantity());
       item.setBrand(brand);
 
 
-
-      var categories = input.getCategories().stream().map(e -> {
-        return this.categoryService.findByIdOrFail(e);
-      }).collect(Collectors.toSet());
+      var categories = input.getCategories().stream()
+              .map(this.categoryService::findByIdOrFail)
+              .collect(Collectors.toSet());
 
       item.setCategories(categories);
 
@@ -79,9 +80,9 @@ public class UpdateItemAction extends AbstractCommand<UpdateItemInput, UpdateIte
       var parsed = parseBase64(getInput().getImage());
 
       var name = uploadAdapter.uploadFromBytes(bucket,
-          "item" + item.getId() + System.currentTimeMillis(),
-          parsed.contentType(),
-          parsed.payload());
+              "item" + item.getId() + System.currentTimeMillis(),
+              parsed.contentType(),
+              parsed.payload());
 
       saveItemImageEntity(item, name);
 

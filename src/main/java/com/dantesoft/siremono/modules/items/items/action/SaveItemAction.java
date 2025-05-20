@@ -1,8 +1,5 @@
 package com.dantesoft.siremono.modules.items.items.action;
 
-import static com.dantesoft.siremono.internal.Utils.parseBase64;
-import java.util.Set;
-import java.util.stream.Collectors;
 import com.dantesoft.siremono.connectors.upload.UploadAdapter;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.internal.commands.AbstractOutput;
@@ -17,6 +14,11 @@ import com.dantesoft.siremono.modules.items.items.store.ItemImageService;
 import com.dantesoft.siremono.modules.items.items.store.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.dantesoft.siremono.internal.Utils.parseBase64;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -54,7 +56,7 @@ public class SaveItemAction extends AbstractCommand<SaveItemInput, SaveItemOutpu
     item.setDescription(getInput().getDescription());
     item.setBuyPrice(getInput().getBuyPrice());
     item.setSellPrice(getInput().getSellPrice());
-    item.setStockQuantity(getInput().getStockQuantity());
+    item.setStockQuantity(0L);
     item.setBrand(brand);
     item.setEnabled(true);
     return item;
@@ -90,9 +92,10 @@ public class SaveItemAction extends AbstractCommand<SaveItemInput, SaveItemOutpu
   private Set<CategoryEntity> ensureCategories() {
     var inputCategories = getInput().getCategories();
 
-    return inputCategories.stream().map(identifier -> {
-      return categoryService.findByIdOrFail(identifier);
-    }).collect(Collectors.toSet());
+    return inputCategories
+            .stream()
+            .map(categoryService::findByIdOrFail)
+            .collect(Collectors.toSet());
   }
 
 }

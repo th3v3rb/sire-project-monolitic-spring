@@ -1,23 +1,18 @@
 package com.dantesoft.siremono.internal.database;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
 @MappedSuperclass
-@Getter
-@Setter
 @EqualsAndHashCode(of = "id")
 public abstract class AbstractEntity {
 
@@ -27,13 +22,15 @@ public abstract class AbstractEntity {
   private UUID id;
 
   @CreationTimestamp
-  @Column(updatable = true, nullable = true)
+  @Column
   private LocalDateTime createdAt;
 
   @UpdateTimestamp
-  @Column(nullable = true)
+  @Column
   private LocalDateTime updatedAt;
-  
+
+  private boolean enabled = true;
+
   private LocalDateTime deletedAt;
 
 }

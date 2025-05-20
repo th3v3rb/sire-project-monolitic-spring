@@ -1,8 +1,5 @@
 package com.dantesoft.siremono.modules.profile.actions;
 
-import static com.dantesoft.siremono.internal.Utils.parseBase64;
-import java.time.LocalDate;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.dantesoft.siremono.connectors.upload.UploadAdapter;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.internal.config.AppProperties;
@@ -14,6 +11,11 @@ import com.dantesoft.siremono.modules.profile.store.ProfileService;
 import com.dantesoft.siremono.modules.profile.store.dto.PreferencesDTO;
 import com.dantesoft.siremono.modules.profile.store.dto.ProfileDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.time.LocalDate;
+
+import static com.dantesoft.siremono.internal.Utils.parseBase64;
 
 @RequiredArgsConstructor
 public class ProfileUpdateAction extends AbstractCommand<ProfileUpdateInput, ProfileUpdateOutput> {

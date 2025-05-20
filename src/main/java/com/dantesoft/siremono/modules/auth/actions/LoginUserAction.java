@@ -1,15 +1,13 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
-import com.dantesoft.siremono.modules.auth.AuthErrors.ValidationException;
-import com.dantesoft.siremono.modules.auth.store.JwtService;
+import com.dantesoft.siremono.internal.exception.ValidationException;
 import com.dantesoft.siremono.modules.auth.store.AccountService;
-
+import com.dantesoft.siremono.modules.auth.store.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -1,47 +1,20 @@
 package com.dantesoft.siremono.modules.items.rest;
 
-import java.util.UUID;
-
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.dantesoft.siremono.internal.commands.CommandExecutor;
-import com.dantesoft.siremono.modules.items.categories.action.DeleteCategoryAction;
-import com.dantesoft.siremono.modules.items.categories.action.DeleteCategoryInput;
-import com.dantesoft.siremono.modules.items.categories.action.DeleteManyCategoriesAction;
-import com.dantesoft.siremono.modules.items.categories.action.DeleteManyCategoriesInput;
-import com.dantesoft.siremono.modules.items.categories.action.DisableCategoryAction;
-import com.dantesoft.siremono.modules.items.categories.action.DisableCategoryInput;
-import com.dantesoft.siremono.modules.items.categories.action.DisableCategoryOutput;
-import com.dantesoft.siremono.modules.items.categories.action.EnableCategoryAction;
-import com.dantesoft.siremono.modules.items.categories.action.EnableCategoryInput;
-import com.dantesoft.siremono.modules.items.categories.action.EnableCategoryOutput;
-import com.dantesoft.siremono.modules.items.categories.action.ListCategoryAction;
-import com.dantesoft.siremono.modules.items.categories.action.ListCategoryInput;
-import com.dantesoft.siremono.modules.items.categories.action.ListCategoryOutput;
-import com.dantesoft.siremono.modules.items.categories.action.SaveCategoryAction;
-import com.dantesoft.siremono.modules.items.categories.action.SaveCategoryInput;
-import com.dantesoft.siremono.modules.items.categories.action.SaveCategoryOutput;
-import com.dantesoft.siremono.modules.items.categories.action.UpdateCategoryAction;
-import com.dantesoft.siremono.modules.items.categories.action.UpdateCategoryInput;
-import com.dantesoft.siremono.modules.items.categories.action.UpdateCategoryOutput;
-
+import com.dantesoft.siremono.modules.items.categories.action.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/items/categories")

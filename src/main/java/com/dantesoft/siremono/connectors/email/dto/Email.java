@@ -1,9 +1,10 @@
 package com.dantesoft.siremono.connectors.email.dto;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter

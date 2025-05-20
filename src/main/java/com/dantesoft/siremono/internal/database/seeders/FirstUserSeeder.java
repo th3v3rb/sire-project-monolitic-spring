@@ -1,23 +1,23 @@
 package com.dantesoft.siremono.internal.database.seeders;
 
-import java.time.LocalDateTime;
-import java.util.Set;
+import com.dantesoft.siremono.internal.events.DomainEventPublisher;
+import com.dantesoft.siremono.modules.auth.events.UserRegisteredEvent;
+import com.dantesoft.siremono.modules.auth.store.AccountService;
+import com.dantesoft.siremono.modules.auth.store.PermissionService;
+import com.dantesoft.siremono.modules.auth.store.RoleService;
+import com.dantesoft.siremono.modules.auth.store.entity.AccountEntity;
+import com.dantesoft.siremono.modules.auth.store.entity.PermissionEntity;
+import com.dantesoft.siremono.modules.auth.store.entity.RoleEntity;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import com.dantesoft.siremono.internal.events.DomainEventPublisher;
-import com.dantesoft.siremono.modules.auth.store.AccountService;
-import com.dantesoft.siremono.modules.auth.events.UserRegisteredEvent;
-import com.dantesoft.siremono.modules.auth.store.PermissionService;
-import com.dantesoft.siremono.modules.auth.store.RoleService;
-import com.dantesoft.siremono.modules.auth.store.entity.PermissionEntity;
-import com.dantesoft.siremono.modules.auth.store.entity.RoleEntity;
-import com.dantesoft.siremono.modules.auth.store.entity.AccountEntity;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Component
 @Slf4j

@@ -1,10 +1,10 @@
 package com.dantesoft.siremono.connectors.upload;
 
-import java.io.InputStream;
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.util.List;
 
 @Service("uploadService")
 public interface UploadAdapter {

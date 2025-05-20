@@ -1,7 +1,5 @@
 package com.dantesoft.siremono.modules.items.brands.actions;
 
-import java.util.List;
-import java.util.UUID;
 import com.dantesoft.siremono.internal.commands.CommandInput;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,6 +7,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor

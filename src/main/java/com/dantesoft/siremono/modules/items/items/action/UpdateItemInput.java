@@ -1,17 +1,14 @@
 package com.dantesoft.siremono.modules.items.items.action;
 
+import com.dantesoft.siremono.internal.commands.CommandInput;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import com.dantesoft.siremono.internal.commands.CommandInput;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -51,12 +48,6 @@ public class UpdateItemInput implements CommandInput {
   @Schema(
     description = "The item sell price")
   private BigDecimal sellPrice;
-
-  @NotNull
-  @PositiveOrZero
-  @Schema(
-    description = "The quantity in the stock")
-  private Long stockQuantity;
 
   @NotNull
   @Schema(

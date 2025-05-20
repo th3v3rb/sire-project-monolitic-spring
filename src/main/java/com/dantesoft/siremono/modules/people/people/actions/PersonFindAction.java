@@ -1,8 +1,6 @@
 package com.dantesoft.siremono.modules.people.people.actions;
 
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
-import com.dantesoft.siremono.modules.people.people.PeopleErrors;
-import com.dantesoft.siremono.modules.people.people.store.PersonEntity;
 import com.dantesoft.siremono.modules.people.people.store.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +12,11 @@ public class PersonFindAction extends AbstractCommand<PersonFindInput, PersonFin
 
   @Override
   public PersonFindOutput doExecute() {
-    var person = findPerson();
+    var person = personService.findByIdOrFail(getInput().getId());
     var out = new PersonFindOutput();
     out.setData(person);
     return out;
   }
-  
-  private PersonEntity findPerson() {
-    var id = getInput().getId();
-    return personService.findById(id)
-        .orElseThrow(() -> new PeopleErrors.NotFoundException(id));
-  }
+
 
 }

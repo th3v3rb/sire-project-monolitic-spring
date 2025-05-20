@@ -1,13 +1,12 @@
 package com.dantesoft.siremono.internal.commands;
 
-import java.util.concurrent.CompletableFuture;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component

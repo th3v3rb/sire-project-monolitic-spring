@@ -1,14 +1,14 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
+import com.dantesoft.siremono.internal.commands.AbstractCommand;
+import com.dantesoft.siremono.internal.exception.ValidationException;
+import com.dantesoft.siremono.modules.auth.store.AccountService;
+import com.dantesoft.siremono.modules.auth.store.OTTService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.ott.OneTimeTokenAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.dantesoft.siremono.internal.commands.AbstractCommand;
-import com.dantesoft.siremono.modules.auth.AuthErrors.ValidationException;
-import com.dantesoft.siremono.modules.auth.store.OTTService;
-import com.dantesoft.siremono.modules.auth.store.AccountService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor

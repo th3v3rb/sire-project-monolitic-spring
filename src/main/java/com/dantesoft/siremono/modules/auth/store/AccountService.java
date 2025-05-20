@@ -1,16 +1,16 @@
 package com.dantesoft.siremono.modules.auth.store;
 
-import java.util.Optional;
-import java.util.UUID;
+import com.dantesoft.siremono.modules.auth.store.entity.AccountEntity;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.dantesoft.siremono.modules.auth.AuthErrors;
-import com.dantesoft.siremono.modules.auth.store.entity.AccountEntity;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +25,10 @@ public class AccountService {
 
   public AccountEntity getAuthenticatedUser() {
     return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-        .filter(Authentication::isAuthenticated).map(Authentication::getPrincipal)
-        .filter(principal -> principal instanceof UserDetails)
-        .map(principal -> (AccountEntity) principal)
-        .orElseThrow(() -> new UsernameNotFoundException("User not authenticated"));
+            .filter(Authentication::isAuthenticated).map(Authentication::getPrincipal)
+            .filter(principal -> principal instanceof UserDetails)
+            .map(principal -> (AccountEntity) principal)
+            .orElseThrow(() -> new UsernameNotFoundException("User not authenticated"));
   }
 
   public Optional<AccountEntity> findByEmail(String email) {
@@ -37,7 +37,7 @@ public class AccountService {
 
   public AccountEntity findByEmailOrFail(String email) {
     return repository.findByEmail(email)
-        .orElseThrow(() -> new AuthErrors.NotFoundException("User not found"));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 
   public AccountEntity save(AccountEntity user) {

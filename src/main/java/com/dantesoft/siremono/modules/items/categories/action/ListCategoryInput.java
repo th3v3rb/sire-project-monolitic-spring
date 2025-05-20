@@ -1,9 +1,9 @@
 package com.dantesoft.siremono.modules.items.categories.action;
 
-import org.springframework.data.domain.Pageable;
 import com.dantesoft.siremono.internal.commands.CommandInput;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Pageable;
 
 @Data
 @NoArgsConstructor

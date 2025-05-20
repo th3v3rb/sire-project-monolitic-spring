@@ -1,22 +1,20 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import org.springframework.security.authentication.ott.GenerateOneTimeTokenRequest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 import com.dantesoft.siremono.connectors.email.DefaultEmailPublisher;
 import com.dantesoft.siremono.connectors.email.dto.Email;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.internal.config.AppProperties;
-import com.dantesoft.siremono.modules.auth.store.OTTService;
 import com.dantesoft.siremono.modules.auth.store.AccountService;
+import com.dantesoft.siremono.modules.auth.store.OTTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.ott.GenerateOneTimeTokenRequest;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SendVerificationEmailAction
-    extends AbstractCommand<SendVerificationEmailInput, SendVerificationEmailOutput> {
+public class SendVerificationEmailAction extends AbstractCommand<SendVerificationEmailInput, SendVerificationEmailOutput> {
 
   private final OTTService ottService;
   private final DefaultEmailPublisher emailPublisher;
@@ -26,13 +24,12 @@ public class SendVerificationEmailAction
 
   @Override
   public SendVerificationEmailOutput doExecute() {
-    var user = userService.findByEmail(getInput().getEmail())
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    var user = userService.findByEmailOrFail(getInput().getEmail());
 
     var req = new GenerateOneTimeTokenRequest(user.getEmail());
     var ott = ottService.generate(req);
     String emailVerificationLink =
-        String.format(appProperties.getFront().emailVerificationUrl(), ott.getTokenValue());
+            String.format(appProperties.getFront().emailVerificationUrl(), ott.getTokenValue());
     String emailContent = generateEmailContent(user.getUsername(), emailVerificationLink);
 
     var email = new Email();

@@ -1,7 +1,6 @@
 package com.dantesoft.siremono.modules.profile.actions;
 
 import com.dantesoft.siremono.internal.commands.CommandInput;
-import com.dantesoft.siremono.modules.auth.store.dto.AccountDTO;
 import com.dantesoft.siremono.modules.profile.store.dto.NotificationDTO;
 import com.dantesoft.siremono.modules.profile.store.dto.PreferencesDTO;
 import com.dantesoft.siremono.modules.profile.store.dto.ProfileDTO;

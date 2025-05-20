@@ -1,9 +1,9 @@
 package com.dantesoft.siremono.modules.people.contacts.actions;
 
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
-import com.dantesoft.siremono.modules.people.contacts.ContactErrors;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactEntity;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,16 +14,16 @@ public class RemoveContactAction extends AbstractCommand<RemoveContactInput, Rem
 
   @Override
   public RemoveContactOutput doExecute() {
-    var contact = findContact();
+    var contact = findContactOrFail();
     var removedContact = contactService.delete(contact);
     var out = new RemoveContactOutput();
     out.setData(removedContact);
     return out;
   }
 
-  private ContactEntity findContact() {
+  private ContactEntity findContactOrFail() {
     var id = getInput().getContactId();
     return contactService.findById(id)
-        .orElseThrow(() -> new ContactErrors.NotFoundException(id));
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 }

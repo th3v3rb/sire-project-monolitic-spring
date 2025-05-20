@@ -1,10 +1,10 @@
 package com.dantesoft.siremono.modules.items.brands.actions;
 
-import org.springframework.data.domain.Pageable;
 import com.dantesoft.siremono.internal.commands.CommandInput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Pageable;
 
 @Getter
 @Setter

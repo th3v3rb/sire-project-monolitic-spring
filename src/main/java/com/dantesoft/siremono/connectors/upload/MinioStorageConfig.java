@@ -1,10 +1,10 @@
 package com.dantesoft.siremono.connectors.upload;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import com.dantesoft.siremono.internal.config.AppProperties;
 import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor

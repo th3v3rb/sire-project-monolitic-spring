@@ -1,10 +1,10 @@
 package com.dantesoft.siremono.modules.auth.store.dto;
 
+import com.dantesoft.siremono.modules.auth.store.entity.PermissionEntity;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.dantesoft.siremono.modules.auth.store.entity.PermissionEntity;
 
 public class PermissionMapper {
 

@@ -1,49 +1,21 @@
 package com.dantesoft.siremono.modules.items.rest;
 
-import java.util.UUID;
-
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.dantesoft.siremono.internal.commands.CommandExecutor;
-import com.dantesoft.siremono.modules.items.brands.actions.DeleteBrandAction;
-import com.dantesoft.siremono.modules.items.brands.actions.DeleteBrandInput;
-import com.dantesoft.siremono.modules.items.brands.actions.DeleteBrandOutput;
-import com.dantesoft.siremono.modules.items.brands.actions.DeleteManyBrandsAction;
-import com.dantesoft.siremono.modules.items.brands.actions.DeleteManyBrandsInput;
-import com.dantesoft.siremono.modules.items.brands.actions.DisableBrandAction;
-import com.dantesoft.siremono.modules.items.brands.actions.DisableBrandInput;
-import com.dantesoft.siremono.modules.items.brands.actions.DisableBrandOutput;
-import com.dantesoft.siremono.modules.items.brands.actions.EnableBrandAction;
-import com.dantesoft.siremono.modules.items.brands.actions.EnableBrandInput;
-import com.dantesoft.siremono.modules.items.brands.actions.EnableBrandOutput;
-import com.dantesoft.siremono.modules.items.brands.actions.ListBrandAction;
-import com.dantesoft.siremono.modules.items.brands.actions.ListBrandInput;
-import com.dantesoft.siremono.modules.items.brands.actions.ListBrandOutput;
-import com.dantesoft.siremono.modules.items.brands.actions.SaveBrandAction;
-import com.dantesoft.siremono.modules.items.brands.actions.SaveBrandInput;
-import com.dantesoft.siremono.modules.items.brands.actions.SaveBrandOutput;
-import com.dantesoft.siremono.modules.items.brands.actions.UpdateBrandAction;
-import com.dantesoft.siremono.modules.items.brands.actions.UpdateBrandInput;
-import com.dantesoft.siremono.modules.items.brands.actions.UpdateBrandOutput;
-
+import com.dantesoft.siremono.modules.items.brands.actions.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/items/brands")

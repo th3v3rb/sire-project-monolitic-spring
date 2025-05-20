@@ -1,41 +1,16 @@
 package com.dantesoft.siremono.modules.auth.rest;
 
-import java.util.UUID;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.dantesoft.siremono.internal.commands.CommandExecutor;
-import com.dantesoft.siremono.modules.auth.actions.ChangePasswordAction;
-import com.dantesoft.siremono.modules.auth.actions.ChangePasswordInput;
-import com.dantesoft.siremono.modules.auth.actions.DisableAccountAction;
-import com.dantesoft.siremono.modules.auth.actions.DisableAccountInput;
-import com.dantesoft.siremono.modules.auth.actions.LoginUserAction;
-import com.dantesoft.siremono.modules.auth.actions.LoginUserInput;
-import com.dantesoft.siremono.modules.auth.actions.LoginUserOutput;
-import com.dantesoft.siremono.modules.auth.actions.RegisterAccountAction;
-import com.dantesoft.siremono.modules.auth.actions.RegisterAccountInput;
-import com.dantesoft.siremono.modules.auth.actions.ResetPasswordAction;
-import com.dantesoft.siremono.modules.auth.actions.ResetPasswordInput;
-import com.dantesoft.siremono.modules.auth.actions.ResetPasswordOutput;
-import com.dantesoft.siremono.modules.auth.actions.SendResetPasswordEmailAction;
-import com.dantesoft.siremono.modules.auth.actions.SendResetPasswordEmailInput;
-import com.dantesoft.siremono.modules.auth.actions.SendResetPasswordEmailOutput;
-import com.dantesoft.siremono.modules.auth.actions.SendVerificationEmailAction;
-import com.dantesoft.siremono.modules.auth.actions.SendVerificationEmailInput;
-import com.dantesoft.siremono.modules.auth.actions.SendVerificationEmailOutput;
-import com.dantesoft.siremono.modules.auth.actions.VerifyAccountAction;
-import com.dantesoft.siremono.modules.auth.actions.VerifyAccountInput;
-import com.dantesoft.siremono.modules.auth.actions.VerifyAccountOutput;
+import com.dantesoft.siremono.modules.auth.actions.*;
 import com.dantesoft.siremono.modules.auth.store.AuthCookieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/auth")

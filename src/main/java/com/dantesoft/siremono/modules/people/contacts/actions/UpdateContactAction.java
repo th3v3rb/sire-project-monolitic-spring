@@ -1,11 +1,11 @@
 package com.dantesoft.siremono.modules.people.contacts.actions;
 
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
-import com.dantesoft.siremono.modules.people.contacts.ContactErrors;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactEntity;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactService;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactTypeEntity;
 import com.dantesoft.siremono.modules.people.contacts.store.ContactTypeService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +17,7 @@ public class UpdateContactAction extends AbstractCommand<UpdateContactInput, Upd
 
   @Override
   public UpdateContactOutput doExecute() {
-    var contactType = findContactType();
+    var contactType = findContactTypeOrFail();
     var contact = findContact();
     var updatedDescription = getInput().getContact();
 
@@ -31,15 +31,15 @@ public class UpdateContactAction extends AbstractCommand<UpdateContactInput, Upd
     return out;
   }
 
-  private ContactTypeEntity findContactType() {
+  private ContactTypeEntity findContactTypeOrFail() {
     var id = getInput().getContactTypeId();
     return contactTypeService.findById(id)
-        .orElseThrow(() -> new ContactErrors.NotFoundException(id));
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
   
   private ContactEntity findContact() {
     var id = getInput().getId();
     return contactService.findById(id)
-        .orElseThrow(() -> new ContactErrors.NotFoundException(id));
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 }

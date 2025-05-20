@@ -1,22 +1,16 @@
 package com.dantesoft.siremono.modules.auth.store;
 
+import com.dantesoft.siremono.modules.auth.store.entity.OTTEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.ott.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
-
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.ott.DefaultOneTimeToken;
-import org.springframework.security.authentication.ott.GenerateOneTimeTokenRequest;
-import org.springframework.security.authentication.ott.OneTimeToken;
-import org.springframework.security.authentication.ott.OneTimeTokenAuthenticationToken;
-import org.springframework.security.authentication.ott.OneTimeTokenService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.dantesoft.siremono.modules.auth.store.entity.OTTEntity;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional

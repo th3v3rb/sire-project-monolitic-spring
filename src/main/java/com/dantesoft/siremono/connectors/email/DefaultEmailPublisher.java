@@ -1,16 +1,14 @@
 package com.dantesoft.siremono.connectors.email;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
-
 import com.dantesoft.siremono.connectors.email.dto.Email;
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -34,7 +32,7 @@ public class DefaultEmailPublisher implements EmailAdapter {
       helper.setSubject(email.getSubject());
       mailSender.send(mimeMessage);
     } catch (MessagingException e) {
-      log.error("Error trying send message: {}", e);
+      log.error("Error trying send message", e);
     }
   }
 

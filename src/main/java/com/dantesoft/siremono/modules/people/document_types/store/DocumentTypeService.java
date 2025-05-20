@@ -1,57 +1,24 @@
 package com.dantesoft.siremono.modules.people.document_types.store;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class DocumentTypeService {
-  private DocumentTypeService service;
+  private final DocumentTypeRepository repository;
 
-  /**
-   * 
-   * @param pageable
-   * @return
-   */
-  public Page<DocumentTypeEntity> all(Pageable pageable) {
-    return service.all(pageable);
+
+  public DocumentTypeEntity save(DocumentTypeEntity entity) {
+    return repository.save(entity);
   }
 
-  /**
-   * 
-   * 
-   * @param documentType
-   * @return
-   */
-  public DocumentTypeEntity save(DocumentTypeEntity documentType) {
-    return service.save(documentType);
+  public DocumentTypeEntity findByIdOrFail(UUID id) {
+    return repository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
-
-  /**
-   * 
-   * 
-   * @param id
-   * @return
-   */
-  public Optional<DocumentTypeEntity> findById(UUID id) {
-    return service.findById(id);
-  }
-
-  /**
-   * 
-   * 
-   * @param documentType
-   * @return
-   */
-  public DocumentTypeEntity delete(DocumentTypeEntity documentType) {
-    this.service.delete(documentType);
-    return documentType;
-  }
-
 }

@@ -12,5 +12,4 @@ import lombok.Setter;
 @Table(name = "categories")
 public class CategoryEntity extends AbstractEntity {
   private String name;
-  private boolean enabled;
 }

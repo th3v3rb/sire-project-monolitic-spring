@@ -1,9 +1,9 @@
 package com.dantesoft.siremono.connectors.email.dto;
 
-import java.nio.ByteBuffer;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.nio.ByteBuffer;
 
 @Getter
 @Setter

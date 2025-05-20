@@ -2,7 +2,6 @@ package com.dantesoft.siremono.modules.people.contacts.store;
 
 import com.dantesoft.siremono.internal.database.AbstractEntity;
 import com.dantesoft.siremono.modules.people.people.store.PersonEntity;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;

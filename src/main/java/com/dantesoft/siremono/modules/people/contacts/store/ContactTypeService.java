@@ -1,13 +1,13 @@
 package com.dantesoft.siremono.modules.people.contacts.store;
 
-import java.util.Optional;
-import java.util.UUID;
-
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +15,6 @@ public class ContactTypeService {
   private final ContactTypeRepository contactTypeRepository;
 
   /**
-   * 
    * @param pageable
    * @return
    */
@@ -24,7 +23,6 @@ public class ContactTypeService {
   }
 
   /**
-   * 
    * @param contactType
    * @return
    */
@@ -33,7 +31,6 @@ public class ContactTypeService {
   }
 
   /**
-   * 
    * @param id
    * @return
    */
@@ -41,8 +38,13 @@ public class ContactTypeService {
     return this.contactTypeRepository.findById(id);
   }
 
+  public ContactTypeEntity findByIdOrFail(UUID id) {
+    return contactTypeRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+  }
+
   /**
-   * 
    * @param contactType
    * @return
    */

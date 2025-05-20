@@ -1,13 +1,16 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import java.time.LocalDateTime;
-import org.springframework.security.authentication.ott.OneTimeTokenAuthenticationToken;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
-import com.dantesoft.siremono.modules.auth.AuthErrors.ValidationException;
-import com.dantesoft.siremono.modules.auth.store.OTTService;
+import com.dantesoft.siremono.internal.exception.ValidationException;
 import com.dantesoft.siremono.modules.auth.store.AccountService;
+import com.dantesoft.siremono.modules.auth.store.OTTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.ott.OneTimeToken;
+import org.springframework.security.authentication.ott.OneTimeTokenAuthenticationToken;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +24,12 @@ public class VerifyAccountAction extends AbstractCommand<VerifyAccountInput, Ver
     var tokenValue = getInput().getToken();
     var tokenReq = OneTimeTokenAuthenticationToken.unauthenticated(tokenValue);
     var ott = ottService.consume(tokenReq);
-    var user = authService.findByEmailOrFail(ott.getUsername());
+
+    var email = Optional.ofNullable(ott)
+            .map(OneTimeToken::getUsername)
+            .orElseThrow(() -> new ValidationException("Username not found on token"));
+
+    var user = authService.findByEmailOrFail(email);
 
     if (user.getEmailVerifiedAt() != null) {
       throw new ValidationException("Email already verified");

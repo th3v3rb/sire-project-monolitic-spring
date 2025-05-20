@@ -1,11 +1,10 @@
 package com.dantesoft.siremono.modules.auth.store;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

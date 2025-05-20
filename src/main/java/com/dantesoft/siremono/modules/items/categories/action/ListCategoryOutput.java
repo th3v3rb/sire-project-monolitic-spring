@@ -1,12 +1,11 @@
 package com.dantesoft.siremono.modules.items.categories.action;
 
-import org.springframework.data.domain.Page;
 import com.dantesoft.siremono.internal.commands.CommandOutput;
 import com.dantesoft.siremono.modules.items.categories.store.CategoryEntity;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 /**
  * DTO de salida para la operación de listado de categorías. Contiene un payload

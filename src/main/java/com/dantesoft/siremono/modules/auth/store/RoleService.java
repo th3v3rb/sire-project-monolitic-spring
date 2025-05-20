@@ -1,9 +1,8 @@
 package com.dantesoft.siremono.modules.auth.store;
 
-import org.springframework.stereotype.Service;
-
 import com.dantesoft.siremono.modules.auth.store.entity.RoleEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

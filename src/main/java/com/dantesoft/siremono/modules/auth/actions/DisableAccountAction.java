@@ -1,9 +1,9 @@
 package com.dantesoft.siremono.modules.auth.actions;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.modules.auth.store.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RequiredArgsConstructor
 public class DisableAccountAction extends AbstractCommand<DisableAccountInput, DisableAccountOutput> {

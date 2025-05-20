@@ -1,11 +1,10 @@
 package com.dantesoft.siremono.modules.people.contacts.store;
 
-import java.util.Optional;
-import java.util.UUID;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

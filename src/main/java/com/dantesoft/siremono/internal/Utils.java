@@ -1,8 +1,9 @@
 package com.dantesoft.siremono.internal;
 
-import java.util.Base64;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.Base64;
 
 //@formatter:off
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

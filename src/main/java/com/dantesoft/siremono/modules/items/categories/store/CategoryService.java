@@ -1,22 +1,23 @@
 package com.dantesoft.siremono.modules.items.categories.store;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.dantesoft.siremono.modules.items.categories.CategoryErrors;
-import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
   private final CategoryRepository repository;
-  
+
   public CategoryEntity findByIdOrFail(UUID id) {
     return repository.findById(id)
-        .orElseThrow(() -> new CategoryErrors.NotFoundException(id));
+            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 
   public Page<CategoryEntity> all(Pageable pageable) {
@@ -24,8 +25,8 @@ public class CategoryService {
   }
 
   public Page<CategoryEntity> findByNameContainingIgnoreCase(
-      String searchParam,
-      Pageable pageable) {
+          String searchParam,
+          Pageable pageable) {
     return repository.findByNameContainingIgnoreCase(searchParam, pageable);
   }
 
