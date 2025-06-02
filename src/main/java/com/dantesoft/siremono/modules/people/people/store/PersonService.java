@@ -37,7 +37,7 @@ public class PersonService {
 
   public PersonEntity findByIdOrFail(UUID personId) {
     return personRepo
-            .findById(personId)
-            .orElseThrow(() -> new EntityNotFoundException(personId.toString()));
+        .findById(personId)
+        .orElseThrow(() -> new EntityNotFoundException(personId.toString()));
   }
 }

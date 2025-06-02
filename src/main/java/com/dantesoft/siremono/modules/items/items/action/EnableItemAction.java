@@ -7,17 +7,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EnableItemAction extends AbstractCommand<EnableItemInput, EnableItemOutput> {
 
-	private final ItemService itemService;
+  private final ItemService itemService;
 
-	@Override
-	public EnableItemOutput doExecute() {
-		var id = getInput().getId();
+  @Override
+  public EnableItemOutput doExecute() {
+    var id = getInput().getId();
 
-		var item = itemService.findByIdOrFail(id);
-		item.setEnabled(true);
-		itemService.save(item);
+    var item = itemService.findByIdOrFail(id);
+    item.setEnabled(true);
+    itemService.save(item);
 
-		return new EnableItemOutput();
-	}
+    return new EnableItemOutput();
+  }
 
 }

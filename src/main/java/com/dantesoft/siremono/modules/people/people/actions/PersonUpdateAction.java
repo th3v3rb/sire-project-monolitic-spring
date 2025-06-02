@@ -36,7 +36,7 @@ public class PersonUpdateAction extends AbstractCommand<PersonUpdateInput, Perso
   private PersonEntity findPersonOrFail() {
     var id = getInput().getId();
     return personService.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 
 

@@ -16,8 +16,8 @@ public class ListMovementsAction extends AbstractCommand<ListMovementsInput, Lis
     item.setId(getInput().getItemID());
 
     var payload = movementService.listAll(
-            getInput().getPageable(),
-            item
+        getInput().getPageable(),
+        item
     );
 
     return AbstractOutput.of(ListMovementsOutput.class, payload);

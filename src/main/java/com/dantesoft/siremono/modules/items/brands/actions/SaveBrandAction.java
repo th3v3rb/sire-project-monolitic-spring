@@ -19,7 +19,7 @@ public class SaveBrandAction extends AbstractCommand<SaveBrandInput, SaveBrandOu
     brand.setName(getInput().getName());
     brand.setEnabled(true);
     var savedBrand = this.brandService.save(brand);
-    
+
     out.setPayload(savedBrand);
     return out;
   }

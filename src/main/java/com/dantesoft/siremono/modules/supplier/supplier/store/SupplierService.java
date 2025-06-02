@@ -29,8 +29,8 @@ public class SupplierService {
 
   public SupplierEntity findByIdOrFail(UUID id) {
     return supplierRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 
   public List<SupplierEntity> findAllWhereIdIn(List<UUID> ids) {

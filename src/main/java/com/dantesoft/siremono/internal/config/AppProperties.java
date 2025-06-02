@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(
-  prefix = "internal")
+    prefix = "internal")
 @Data
 public class AppProperties {
   private String[] whiteListedEndpoints;
@@ -17,7 +17,7 @@ public class AppProperties {
   private Storage storage;
 
   public record Storage(String endpoint, String accessKey, String secretKey, String itemsBucket,
-      String profileImagesBucket) {
+                        String profileImagesBucket) {
   }
 
   public record JWT(String secret, String expiration) {

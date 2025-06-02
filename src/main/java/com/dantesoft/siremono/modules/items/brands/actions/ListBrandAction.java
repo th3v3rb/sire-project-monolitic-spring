@@ -16,7 +16,7 @@ public class ListBrandAction extends AbstractCommand<ListBrandInput, ListBrandOu
     var pageable = getInput().getPageable();
 
     var payload = this.brandService.searchBrands(searchParam, pageable);
-    
+
     var out = new ListBrandOutput();
     out.setPayload(payload);
 

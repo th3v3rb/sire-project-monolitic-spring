@@ -8,6 +8,6 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-public class DisableCategoryInput implements CommandInput{
+public class DisableCategoryInput implements CommandInput {
   private UUID id;
 }

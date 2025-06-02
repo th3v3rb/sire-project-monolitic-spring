@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DomainEventPublisher {
 
-    private final ApplicationEventPublisher delegate;
+  private final ApplicationEventPublisher delegate;
 
-    public <T> void publish(Event<T> event) {
-        delegate.publishEvent(event);
-    }
+  public <T> void publish(Event<T> event) {
+    delegate.publishEvent(event);
+  }
 }

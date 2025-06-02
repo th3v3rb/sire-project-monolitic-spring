@@ -9,13 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class FindItemAction extends AbstractCommand<FindItemInput, FindItemOutput> {
-	private final ItemService itemService;
+  private final ItemService itemService;
 
-	@Override
-	public FindItemOutput doExecute() {
-		var id = getInput().getId();
-		var storedItem = itemService.findByIdOrFail(id);
-		return AbstractOutput.of(FindItemOutput.class, storedItem);
-	}
+  @Override
+  public FindItemOutput doExecute() {
+    var id = getInput().getId();
+    var storedItem = itemService.findByIdOrFail(id);
+    return AbstractOutput.of(FindItemOutput.class, storedItem);
+  }
 
 }

@@ -7,6 +7,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AttachContactOutput implements CommandOutput{
+public class AttachContactOutput implements CommandOutput {
   private ContactEntity data;
 }

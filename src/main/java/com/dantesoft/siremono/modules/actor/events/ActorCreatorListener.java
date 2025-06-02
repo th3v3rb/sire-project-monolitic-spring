@@ -25,12 +25,12 @@ public class ActorCreatorListener {
     var customer = event.getSource();
 
     var arg = AddActorInput
-            .builder()
-            .name(customer.getName())
-            .description(customer.getDescription())
-            .socialReason(customer.getSocialReason())
-            .personKind(customer.getPersonKind())
-            .build();
+        .builder()
+        .name(customer.getName())
+        .description(customer.getDescription())
+        .socialReason(customer.getSocialReason())
+        .personKind(customer.getPersonKind())
+        .build();
 
     handler.execute(AddActorAction.class, arg);
 

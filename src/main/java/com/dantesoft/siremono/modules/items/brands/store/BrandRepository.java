@@ -15,16 +15,16 @@ import java.util.UUID;
 @Repository
 public interface BrandRepository extends JpaRepository<BrandEntity, UUID> {
 
-	Page<BrandEntity> findByNameContainingIgnoreCase(String searchParam, Pageable p);
-	
-	@Modifying
-	@Transactional
-	@Query("UPDATE BrandEntity b SET b.enabled = :enabled WHERE b.id IN :ids")
-	void updateStatusByIds(@Param("ids") List<UUID> ids, @Param("enabled") boolean status);
+  Page<BrandEntity> findByNameContainingIgnoreCase(String searchParam, Pageable p);
 
-	@Modifying
-	@Transactional
-	@Query("DELETE FROM BrandEntity b WHERE b.id IN :ids")
-	void deleteAllByIds(@Param("ids") List<UUID> ids);
+  @Modifying
+  @Transactional
+  @Query("UPDATE BrandEntity b SET b.enabled = :enabled WHERE b.id IN :ids")
+  void updateStatusByIds(@Param("ids") List<UUID> ids, @Param("enabled") boolean status);
+
+  @Modifying
+  @Transactional
+  @Query("DELETE FROM BrandEntity b WHERE b.id IN :ids")
+  void deleteAllByIds(@Param("ids") List<UUID> ids);
 
 }

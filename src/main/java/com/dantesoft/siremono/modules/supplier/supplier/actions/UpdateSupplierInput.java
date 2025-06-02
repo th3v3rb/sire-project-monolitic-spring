@@ -4,7 +4,6 @@ import com.dantesoft.siremono.internal.commands.CommandInput;
 import com.dantesoft.siremono.internal.validation.ValidEnum;
 import com.dantesoft.siremono.modules.actor.actor.store.PersonKind;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.UUID;

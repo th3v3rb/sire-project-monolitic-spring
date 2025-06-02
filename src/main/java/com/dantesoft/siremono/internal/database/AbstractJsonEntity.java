@@ -11,7 +11,7 @@ import org.hibernate.type.SqlTypes;
 @Getter
 @Setter
 public abstract class AbstractJsonEntity<T> extends AbstractEntity {
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private T data;
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(columnDefinition = "jsonb")
+  private T data;
 }

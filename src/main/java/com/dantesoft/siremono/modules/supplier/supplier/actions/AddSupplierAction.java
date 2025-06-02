@@ -13,12 +13,12 @@ public class AddSupplierAction extends AbstractCommand<AddSupplierInput, AddSupp
   @Override
   protected AddSupplierOutput doExecute() {
     var draft = SupplierEntity
-            .builder()
-            .name(getInput().getName())
-            .description(getInput().getDescription())
-            .personKind(getInput().getPersonKind())
-            .socialReason(getInput().getSocialReason())
-            .build();
+        .builder()
+        .name(getInput().getName())
+        .description(getInput().getDescription())
+        .personKind(getInput().getPersonKind())
+        .socialReason(getInput().getSocialReason())
+        .build();
 
     var payload = supplierService.save(draft);
 

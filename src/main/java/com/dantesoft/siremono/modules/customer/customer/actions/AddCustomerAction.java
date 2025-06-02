@@ -15,12 +15,12 @@ public class AddCustomerAction extends AbstractCommand<AddCustomerInput, AddCust
   @Override
   protected AddCustomerOutput doExecute() {
     var draft = CustomerEntity
-            .builder()
-            .name(getInput().getName())
-            .description(getInput().getDescription())
-            .socialReason(getInput().getSocialReason())
-            .personKind(getInput().getPersonKind())
-            .build();
+        .builder()
+        .name(getInput().getName())
+        .description(getInput().getDescription())
+        .socialReason(getInput().getSocialReason())
+        .personKind(getInput().getPersonKind())
+        .build();
 
     var entity = customerService.save(draft);
 

@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DeleteCategoryOutput implements CommandOutput {
-	// no output
+  // no output
 }

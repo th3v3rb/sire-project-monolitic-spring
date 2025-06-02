@@ -36,7 +36,7 @@ public class UpdateContactAction extends AbstractCommand<UpdateContactInput, Upd
     return contactTypeService.findById(id)
         .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
-  
+
   private ContactEntity findContact() {
     var id = getInput().getId();
     return contactService.findById(id)

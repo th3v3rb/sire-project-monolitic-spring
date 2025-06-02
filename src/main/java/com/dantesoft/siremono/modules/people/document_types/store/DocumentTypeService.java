@@ -18,7 +18,7 @@ public class DocumentTypeService {
 
   public DocumentTypeEntity findByIdOrFail(UUID id) {
     return repository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 }

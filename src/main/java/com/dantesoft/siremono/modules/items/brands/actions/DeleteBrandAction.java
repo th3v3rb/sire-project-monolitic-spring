@@ -17,7 +17,7 @@ public class DeleteBrandAction extends AbstractCommand<DeleteBrandInput, DeleteB
 
     var brand = brandService.findByIdOrFail(id);
     brandService.delete(brand);
-    
+
     out.setPayload(brand);
     return out;
   }

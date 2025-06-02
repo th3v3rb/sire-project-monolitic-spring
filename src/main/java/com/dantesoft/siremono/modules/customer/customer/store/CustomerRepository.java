@@ -12,10 +12,10 @@ import java.util.UUID;
 public interface CustomerRepository extends JpaRepository<CustomerEntity, UUID> {
 
   @Query("""
-            SELECT c FROM CustomerEntity c 
-            WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%'))
-               OR LOWER(c.socialReason) LIKE LOWER(CONCAT('%', :query, '%'))
-          """)
+        SELECT c FROM CustomerEntity c 
+        WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(c.socialReason) LIKE LOWER(CONCAT('%', :query, '%'))
+      """)
   Page<CustomerEntity> searchByNameOrSocialReason(Pageable pageable, String query);
 
 }

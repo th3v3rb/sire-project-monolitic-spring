@@ -2,7 +2,7 @@ package com.dantesoft.siremono.internal.commands;
 
 /**
  * Abstract base class for all actions that provides access to the input
- * 
+ *
  * @param <I> Application input argument
  * @param <O> Application output result
  */

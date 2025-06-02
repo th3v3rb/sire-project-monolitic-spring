@@ -12,12 +12,12 @@ public class AddActorAction extends AbstractCommand<AddActorInput, AddActorOutpu
   @Override
   protected AddActorOutput doExecute() {
     var draft = ActorEntity
-            .builder()
-            .name(getInput().getName())
-            .description(getInput().getDescription())
-            .socialReason(getInput().getSocialReason())
-            .personKind(getInput().getPersonKind())
-            .build();
+        .builder()
+        .name(getInput().getName())
+        .description(getInput().getDescription())
+        .socialReason(getInput().getSocialReason())
+        .personKind(getInput().getPersonKind())
+        .build();
 
     actorService.save(draft);
 

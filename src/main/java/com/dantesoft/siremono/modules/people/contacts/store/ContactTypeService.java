@@ -40,8 +40,8 @@ public class ContactTypeService {
 
   public ContactTypeEntity findByIdOrFail(UUID id) {
     return contactTypeRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 
   /**

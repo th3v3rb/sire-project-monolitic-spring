@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DocumentTypeEntity extends AbstractEntity{
+public class DocumentTypeEntity extends AbstractEntity {
   private UUID id;
   private String name;
 }

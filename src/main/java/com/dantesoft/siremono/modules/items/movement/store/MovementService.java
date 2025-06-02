@@ -20,15 +20,15 @@ public class MovementService {
 
   public MovementEntity findByIdOrFail(final UUID id) {
     return repository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 
 
   public Page<MovementEntity> listAll(
-          final Pageable pageable,
-          final ItemEntity item
+      final Pageable pageable,
+      final ItemEntity item
   ) {
-      return repository.findAllByItem(pageable, item);
+    return repository.findAllByItem(pageable, item);
   }
 
 }

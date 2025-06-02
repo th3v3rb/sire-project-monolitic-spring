@@ -4,5 +4,6 @@ import java.util.UUID;
 
 public interface BrandView {
   UUID getId();
+
   String getName();
 }
