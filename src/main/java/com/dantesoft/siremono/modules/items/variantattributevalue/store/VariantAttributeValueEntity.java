@@ -8,6 +8,8 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -19,4 +21,5 @@ public class VariantAttributeValueEntity extends AbstractEntity {
   private VariantAttributeDefinitionEntity definition;
 
   private String value;
+  private BigDecimal plusPrice;
 }

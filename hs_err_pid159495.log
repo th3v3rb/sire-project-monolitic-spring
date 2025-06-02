@@ -106,7 +106,7 @@ Register to memory mapping:
 
 RAX=0x00007b495860870e is at code_begin+2670 in an Interpreter codelet
 return entry points  [0x00007b4958607ca0, 0x00007b49586096c0]  6688 bytes
-RBX=0x00000007757def10 is an oop: com.dantesoft.siremono.modules.auth.events.UserRegisteredEvent 
+RBX=0x00000007757def10 is an oop: com.dantesoft.siremono.modules.auth.authentication.actions.events.UserRegisteredEvent
 {0x00000007757def10} - klass: 'com/dantesoft/siremono/modules/auth/events/UserRegisteredEvent' - flags: 
 
  - ---- fields (total size 3 words):

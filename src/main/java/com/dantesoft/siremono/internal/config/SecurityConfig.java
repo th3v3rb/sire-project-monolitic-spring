@@ -1,7 +1,7 @@
 package com.dantesoft.siremono.internal.config;
 
 import com.dantesoft.siremono.internal.filters.JwtFilter;
-import com.dantesoft.siremono.modules.auth.store.CustomUserDetailsService;
+import com.dantesoft.siremono.modules.auth.authentication.store.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,26 +36,25 @@ public class SecurityConfig {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    //@formatter:off
-        return http.csrf(AbstractHttpConfigurer::disable)
-                .cors(c -> c.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(
-                        req -> 
-                        req
-                        .requestMatchers(app.getWhiteListedEndpoints()).permitAll()
-                        .anyRequest().authenticated())
-                .userDetailsService(userDetailsServiceImp)
-                .exceptionHandling(
-                        e -> e.accessDeniedHandler((
-                                req, res, ex)
-                                        -> res.setStatus(HttpStatus.FORBIDDEN.value()))
-                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .logout(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .headers(h -> h.frameOptions(FrameOptionsConfig::disable)).build();
-        //@formatter:on
+    return http.csrf(AbstractHttpConfigurer::disable)
+        .cors(c -> c.configurationSource(corsConfigurationSource()))
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            req ->
+                req
+                    .requestMatchers(app.getWhiteListedEndpoints()).permitAll()
+                    .anyRequest().authenticated())
+        .userDetailsService(userDetailsServiceImp)
+        .exceptionHandling(
+            e -> e.accessDeniedHandler((
+                    req, res, ex)
+                    -> res.setStatus(HttpStatus.FORBIDDEN.value()))
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+        .logout(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .headers(h -> h.frameOptions(FrameOptionsConfig::disable)).build();
   }
 
   @Bean

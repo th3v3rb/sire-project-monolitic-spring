@@ -1,5 +1,6 @@
 package com.dantesoft.siremono.modules.items.categories.store;
 
+import com.dantesoft.siremono.modules.items.items.store.ItemEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -18,12 +20,13 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> 
 
   @Modifying
   @Transactional
-  @Query("UPDATE CategoryEntity b SET b.enabled = :active WHERE b.id IN :ids")
-  int updateActiveStatusByIds(@Param("ids") List<UUID> ids, @Param("active") boolean active);
-
-  @Modifying
-  @Transactional
   @Query("DELETE FROM CategoryEntity b WHERE b.id IN :ids")
   void deleteAllByIds(@Param("ids") List<UUID> ids);
 
+
+  @Query("""
+          select _item.categories FROM ItemEntity _item
+          WHERE _item = :item
+      """)
+  Set<CategoryEntity> findCategoryEntitiesByItem(@Param("item") ItemEntity item);
 }

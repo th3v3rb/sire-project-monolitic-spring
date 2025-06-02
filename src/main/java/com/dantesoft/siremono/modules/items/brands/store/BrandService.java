@@ -15,10 +15,14 @@ import java.util.UUID;
 public class BrandService {
   private final BrandRepository brandRepo;
 
+  public List<BrandEntity> findAll() {
+    return brandRepo.findAll();
+  }
+
   public BrandEntity findByIdOrFail(UUID id) {
     return brandRepo
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 
   public Page<BrandEntity> searchBrands(String search, Pageable pageable) {

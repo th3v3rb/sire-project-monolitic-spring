@@ -8,5 +8,11 @@ import org.springframework.stereotype.Service;
 public class VariantAttributeValueService {
   private final VariantAttributeValueRepository variantAttributeValueRepository;
 
+  public long count() {
+    return variantAttributeValueRepository.count();
+  }
 
+  public VariantAttributeValueEntity save(final VariantAttributeValueEntity variantAttributeValueEntity) {
+    return variantAttributeValueRepository.save(variantAttributeValueEntity);
+  }
 }

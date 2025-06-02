@@ -8,10 +8,12 @@ import lombok.Setter;
 
 import java.util.Map;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ItemEntityData {
-	private Map<String, String> properties;
-	
+  private Map<String, String> properties;
+
 }

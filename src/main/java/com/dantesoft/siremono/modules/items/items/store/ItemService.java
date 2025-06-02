@@ -1,6 +1,6 @@
 package com.dantesoft.siremono.modules.items.items.store;
 
-import com.dantesoft.siremono.modules.items.items.store.views.ItemView;
+import com.dantesoft.siremono.modules.items.categories.store.CategoryEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,11 +16,15 @@ import java.util.UUID;
 public class ItemService {
   private final ItemRepository repository;
 
-  public Page<ItemEntity> all(Pageable pageable) {
-    return repository.findAll(pageable);
+  public List<ItemEntity> findAll() {
+    return repository.findAll();
   }
 
-  public Page<ItemView> allBySearchParam(String searchParam, Pageable pageable) {
+  public boolean existByCategoryContaining(CategoryEntity category) {
+    return repository.existsByCategoriesContaining(category);
+  }
+
+  public Page<ItemEntity> allBySearchParam(String searchParam, Pageable pageable) {
     return repository.findByName(searchParam, pageable);
   }
 
@@ -34,16 +38,12 @@ public class ItemService {
 
   public ItemEntity findByIdOrFail(UUID id) {
     return repository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
   }
 
   public void delete(ItemEntity item) {
     repository.delete(item);
-  }
-
-  public int updateStatusWhereIdsIn(List<UUID> ids, boolean enabled) {
-    return repository.updateStatusByIds(ids, enabled);
   }
 
   public void deleteAll(List<ItemEntity> list) {

@@ -1,16 +1,17 @@
 package com.dantesoft.siremono.internal.filters;
 
 import com.dantesoft.siremono.internal.config.AppProperties;
-import com.dantesoft.siremono.modules.auth.store.JwtService;
-import com.dantesoft.siremono.modules.auth.store.entity.AccountEntity;
-import com.dantesoft.siremono.modules.auth.store.entity.RoleEntity;
+import com.dantesoft.siremono.modules.auth.authentication.store.entity.AccountEntity;
+import com.dantesoft.siremono.modules.auth.authentication.store.entity.RoleEntity;
+import com.dantesoft.siremono.modules.auth.authentication.store.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,11 +21,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,71 +37,60 @@ public class JwtFilter extends OncePerRequestFilter {
   private final AppProperties app;
 
   @Override
-  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-    return Arrays.stream(app.getWhiteListedEndpoints())
+  protected boolean shouldNotFilter(@NotNull HttpServletRequest request) {
+    return Arrays
+        .stream(app.getWhiteListedEndpoints())
         .anyMatch(e -> e.equals(request.getRequestURI()));
   }
 
-
   @Override
-  protected void doFilterInternal(@NonNull HttpServletRequest request,
-      @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
-      throws ServletException, IOException {
+  protected void doFilterInternal(
+      @NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain
+  ) throws ServletException, IOException {
     String requestURI = request.getRequestURI();
-    try {
-      String token = resolveToken(request);
+    String token = resolveToken(request);
 
-      if (token == null) {
-        log.warn("No JWT cookie for request to {}", requestURI);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return;
-      }
-      
-      if (!jwtService.isTokenValid(token)) {
-        log.warn("Invalid JWT for request to {}", requestURI);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return;
-      }
-
-      String email = jwtService.extractEmail(token);
-
-      if (email == null || email.isBlank()) {
-        log.warn("Empty email in JWT for request to {}", requestURI);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return;
-      }
-
-      if (SecurityContextHolder.getContext().getAuthentication() == null) {
-        Set<RoleEntity> roles = jwtService.extractRoles(token);
-        Collection<GrantedAuthority> authorities = extractAuthorities(roles);
-
-        var user = new AccountEntity();
-        user.setId(jwtService.extractUserId(token));
-        user.setUsername(jwtService.extractUsername(token));
-        user.setEmail(jwtService.extractEmail(token));
-        user.setEmailVerifiedAt(jwtService.extractMailVerifiedAt(token));
-        user.setRoles(roles);
-
-        var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
-        auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        log.info("Authenticated '{}' for {}", email, requestURI);
-      }
-
-      filterChain.doFilter(request, response);
-    } catch (Exception ex) {
-      log.error("Error in JwtFilter for {}: {}", requestURI, ex.getMessage(), ex);
-      response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    if (!jwtService.isTokenValid(token)) {
+      log.warn("Invalid JWT for request to {}", requestURI);
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid jwt");
     }
+
+    String email = jwtService.extractEmail(token);
+
+    if (email == null || email.isBlank()) {
+      log.warn("Empty email in JWT for request to {}", requestURI);
+      response.setStatus(HttpStatus.UNAUTHORIZED.value());
+      return;
+    }
+
+    if (SecurityContextHolder.getContext().getAuthentication() == null) {
+      Set<RoleEntity> roles = jwtService.extractRoles(token);
+      Collection<GrantedAuthority> authorities = extractAuthorities(roles);
+
+      var user = new AccountEntity();
+      user.setId(jwtService.extractUserId(token));
+      user.setUsername(jwtService.extractUsername(token));
+      user.setEmail(jwtService.extractEmail(token));
+      user.setEmailVerifiedAt(jwtService.extractMailVerifiedAt(token));
+      user.setRoles(roles);
+
+      var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
+      auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+      SecurityContextHolder.getContext().setAuthentication(auth);
+      log.info("Authenticated '{}' for {}", email, requestURI);
+    }
+
+    filterChain.doFilter(request, response);
+
   }
 
   private Collection<GrantedAuthority> extractAuthorities(Set<RoleEntity> roles) {
-    Set<GrantedAuthority> authorities = new HashSet<>();
 
-    Set<GrantedAuthority> roleAuthorities =
-        roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-            .collect(Collectors.toSet());
-    authorities.addAll(roleAuthorities);
+    Set<GrantedAuthority> authorities = roles.stream()
+        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+        .collect(Collectors.toSet());
 
     roles.forEach(role -> {
       Set<GrantedAuthority> permissionAuthorities = role.getPermissions().stream()
@@ -113,16 +103,23 @@ public class JwtFilter extends OncePerRequestFilter {
   }
 
   private String resolveToken(HttpServletRequest request) {
-    Cookie[] cookies = request.getCookies();
-    if (cookies == null) {
-      return null;
+    String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+    if (header == null || header.isBlank()) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing JWT header");
     }
 
-    for (Cookie cookie : cookies) {
-      if (cookie.getName().equals("jwt")) {
-        return cookie.getValue();
-      }
+    if (!header.startsWith("Bearer ")) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization header must start with 'Bearer '");
     }
-    return null;
+
+    String token = header.substring(7).trim();
+
+    if (token.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT token is empty");
+    }
+
+    return token;
   }
+
 }

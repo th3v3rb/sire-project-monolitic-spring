@@ -1,5 +1,6 @@
 package com.dantesoft.siremono.modules.items.categories.store;
 
+import com.dantesoft.siremono.modules.items.items.store.ItemEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -15,18 +17,22 @@ import java.util.UUID;
 public class CategoryService {
   private final CategoryRepository repository;
 
-  public CategoryEntity findByIdOrFail(UUID id) {
-    return repository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+  public List<CategoryEntity> findAll() {
+    return repository.findAll();
   }
 
-  public Page<CategoryEntity> all(Pageable pageable) {
-    return repository.findAll(pageable);
+  public CategoryEntity findByIdOrFail(UUID id) {
+    return repository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+  }
+
+  public List<CategoryEntity> findAllById(List<UUID> ids) {
+    return repository.findAllById(ids);
   }
 
   public Page<CategoryEntity> findByNameContainingIgnoreCase(
-          String searchParam,
-          Pageable pageable) {
+      String searchParam,
+      Pageable pageable) {
     return repository.findByNameContainingIgnoreCase(searchParam, pageable);
   }
 
@@ -42,11 +48,13 @@ public class CategoryService {
     repository.delete(category);
   }
 
-  public int updateStatusWhereAllInIds(List<UUID> list, boolean status) {
-    return repository.updateActiveStatusByIds(list, status);
-  }
-
   public void deleteWhereAllInIds(List<UUID> list) {
     repository.deleteAllByIds(list);
+  }
+
+  public Set<CategoryEntity> findCategoriesByItemId(UUID itemId) {
+    var item = new ItemEntity();
+    item.setId(itemId);
+    return repository.findCategoryEntitiesByItem(item);
   }
 }

@@ -2,6 +2,7 @@ package com.dantesoft.siremono.modules.items.items.action;
 
 
 import com.dantesoft.siremono.connectors.upload.UploadAdapter;
+import com.dantesoft.siremono.internal.Utils;
 import com.dantesoft.siremono.internal.commands.AbstractCommand;
 import com.dantesoft.siremono.internal.commands.AbstractOutput;
 import com.dantesoft.siremono.internal.config.AppProperties;
@@ -11,18 +12,19 @@ import com.dantesoft.siremono.modules.items.items.store.ItemEntity;
 import com.dantesoft.siremono.modules.items.items.store.ItemImageEntity;
 import com.dantesoft.siremono.modules.items.items.store.ItemImageService;
 import com.dantesoft.siremono.modules.items.items.store.ItemService;
+import com.dantesoft.siremono.modules.items.items.store.dto.ItemDTO;
+import com.dantesoft.siremono.modules.items.items.store.dto.ItemImageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.stream.Collectors;
-
-import static com.dantesoft.siremono.internal.Utils.parseBase64;
+import java.util.HashSet;
 
 @Slf4j
 @RequiredArgsConstructor
 public class UpdateItemAction extends AbstractCommand<UpdateItemInput, UpdateItemOutput> {
+
   private final ItemService itemService;
   private final BrandService brandService;
   private final CategoryService categoryService;
@@ -30,7 +32,6 @@ public class UpdateItemAction extends AbstractCommand<UpdateItemInput, UpdateIte
   private final UploadAdapter uploadAdapter;
   private final PlatformTransactionManager txManager;
   private final AppProperties app;
-
 
   @Override
   public UpdateItemOutput doExecute() {
@@ -40,65 +41,78 @@ public class UpdateItemAction extends AbstractCommand<UpdateItemInput, UpdateIte
       var input = getInput();
       var item = itemService.findByIdOrFail(input.getId());
       var brand = brandService.findByIdOrFail(input.getBrandId());
+      var categories = categoryService.findAllById(getInput().getCategories());
 
       item.setName(input.getName());
       item.setDescription(input.getDescription());
       item.setBuyPrice(input.getBuyPrice());
-      item.setStockQuantity(0L);
       item.setSellPrice(input.getSellPrice());
+      item.setStockQuantity(0L);
       item.setBrand(brand);
+      item.setCategories(new HashSet<>(categories));
 
-
-      var categories = input.getCategories().stream()
-              .map(this.categoryService::findByIdOrFail)
-              .collect(Collectors.toSet());
-
-      item.setCategories(categories);
-
-      if (input.getImage() != null && !input.getImage().isEmpty()) {
-        disableOldImage(item);
-        processItemImage(item);
-      }
 
       var updatedItem = itemService.save(item);
-      return AbstractOutput.of(UpdateItemOutput.class, updatedItem);
 
+      ItemImageEntity image = updateMainImage(updatedItem);
+
+      var payload = new ItemDTO(
+          updatedItem.getId(),
+          updatedItem.getName(),
+          updatedItem.getDescription(),
+          updatedItem.getBuyPrice(),
+          updatedItem.getSellPrice(),
+          updatedItem.getStockQuantity(),
+          updatedItem.isEnabled(),
+          updatedItem.getCreatedAt(),
+          updatedItem.getUpdatedAt(),
+          updatedItem.getBrand(),
+          updatedItem.getCategories(),
+          getPresignedMainImageUrl(updatedItem, image)
+      );
+
+      return AbstractOutput.of(UpdateItemOutput.class, payload);
     });
   }
 
-  private void disableOldImage(ItemEntity item) {
+  private ItemImageEntity updateMainImage(ItemEntity item) {
+    if (getInput().getImage() == null || getInput().getImage().isEmpty()) return null;
+
+    var parsedImage = Utils.parseBase64(getInput().getImage());
+
     itemImageService.findMainByItem(item).ifPresent(image -> {
       image.setEnabled(false);
       itemImageService.save(image);
-      log.info("Imagen anterior eliminada: {}", image.getName());
+      log.info("Old image has been disabled: {}", image.getName());
     });
+
+    return itemImageService.uploadAndSave(
+        new ItemImageDTO(
+            parsedImage.payload(),
+            parsedImage.contentType(),
+            item,
+            true
+        )
+    );
   }
 
-  private void processItemImage(ItemEntity item) {
-    try {
-      var bucket = app.getStorage().itemsBucket();
-      var parsed = parseBase64(getInput().getImage());
-
-      var name = uploadAdapter.uploadFromBytes(bucket,
-              "item" + item.getId() + System.currentTimeMillis(),
-              parsed.contentType(),
-              parsed.payload());
-
-      saveItemImageEntity(item, name);
-
-    } catch (Exception e) {
-      log.error("Error al guardar la imagen del item {}", item.getId(), e);
-      throw new RuntimeException("Error al procesar la imagen del item", e);
+  private String getPresignedMainImageUrl(ItemEntity item, ItemImageEntity image) {
+    if (image == null) {
+      image = item.getImages().stream().filter(ItemImageEntity::isMain).findFirst().orElse(null);
     }
-  }
 
-  private void saveItemImageEntity(ItemEntity item, String objectName) {
-    var itemImage = new ItemImageEntity();
-    itemImage.setItem(item);
-    itemImage.setName(objectName);
-    itemImage.setMain(true);
-    itemImage.setEnabled(true);
-    itemImageService.save(itemImage);
+    if (image == null) return "";
+
+    try {
+      return uploadAdapter.getPresignedUrl(
+          app.getStorage().itemsBucket(),
+          image.getName(),
+          3600
+      );
+    } catch (Exception e) {
+      log.error("Error al generar URL presignada para item {}", image.getId(), e);
+      return "";
+    }
   }
 
 }

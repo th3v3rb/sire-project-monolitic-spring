@@ -1,9 +1,12 @@
 package com.dantesoft.siremono.modules.items.variantattributedefinition.actions;
 
 import com.dantesoft.siremono.internal.commands.CommandInput;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 
-public record AddVariantAttributeDefinitionInput()
-        implements CommandInput {
+public record AddVariantAttributeDefinitionInput(
+    @NotNull
+    String name
+)
+    implements CommandInput {
 
 }
