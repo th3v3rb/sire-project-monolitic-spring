@@ -19,7 +19,7 @@ spring:
         default_batch_fetch_size: 50
     show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       format_sql: false
       use_sql_comments: false
       naming:

@@ -184,8 +184,4 @@ public class JwtService {
     return Keys.hmacShaKeyFor(keyBytes);
   }
 
-  private boolean isTokenNotExpired(String token) {
-    return !getAllClaims(token).getExpiration().before(new Date());
-  }
-
 }

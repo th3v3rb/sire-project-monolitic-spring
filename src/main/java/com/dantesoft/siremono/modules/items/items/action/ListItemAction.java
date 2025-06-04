@@ -29,7 +29,7 @@ public class ListItemAction extends AbstractCommand<ListItemInput, ListItemOutpu
     var searchParam = getInput().getFilter();
     var rawPage = itemService.allBySearchParam(searchParam, pageable);
     var formattedPage = prepareUrl(rawPage);
-
+    
     return AbstractOutput.of(ListItemOutput.class, formattedPage);
   }
 
