@@ -59,7 +59,7 @@ public class ProfileUpdateAction extends AbstractCommand<ProfileUpdateInput, Pro
       profile.setBio(req.getBio());
     }
 
-    if (req.getBirthDate() != null) {
+    if (req.getBirthDate() != null && !req.getBirthDate().isEmpty()) {
       String isoDate = req.getBirthDate().substring(0, 10);
       LocalDate birthDate = LocalDate.parse(isoDate);
       profile.setBirthDay(birthDate);

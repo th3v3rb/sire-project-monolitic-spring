@@ -1,25 +1,35 @@
 package com.dantesoft.siremono.modules.items.items.store;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.dantesoft.siremono.internal.database.AbstractJsonEntity;
 import com.dantesoft.siremono.modules.items.brands.store.BrandEntity;
 import com.dantesoft.siremono.modules.items.categories.store.CategoryEntity;
-import com.dantesoft.siremono.modules.items.variant.store.VariantEntity;
-import io.jsonwebtoken.lang.Collections;
-import jakarta.persistence.*;
-import lombok.*;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Table(name = "items")
-@AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class ItemEntity extends AbstractJsonEntity<ItemEntityData> {
   private String name;
   private String description;
@@ -38,7 +48,8 @@ public class ItemEntity extends AbstractJsonEntity<ItemEntityData> {
       joinColumns = @JoinColumn(name = "item_id"),
       inverseJoinColumns = @JoinColumn(name = "category_id")
   )
-  private Set<CategoryEntity> categories = Collections.emptySet();
+  @Builder.Default
+  private Set<CategoryEntity> categories = new HashSet<>();
 
   @OneToMany(
       mappedBy = "item",
@@ -46,14 +57,7 @@ public class ItemEntity extends AbstractJsonEntity<ItemEntityData> {
       cascade = CascadeType.ALL,
       orphanRemoval = true
   )
-  private Set<ItemImageEntity> images = Collections.emptySet();
-
-  @OneToMany(
-      mappedBy = "item",
-      fetch = FetchType.EAGER,
-      cascade = CascadeType.ALL,
-      orphanRemoval = true
-  )
-  private List<VariantEntity> variants = new ArrayList<>();
+  @Builder.Default
+  private Set<ItemImageEntity> images = new HashSet<>();
 
 }

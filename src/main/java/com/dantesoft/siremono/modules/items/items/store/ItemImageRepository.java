@@ -11,12 +11,12 @@ import java.util.UUID;
 @Repository
 public interface ItemImageRepository extends JpaRepository<ItemImageEntity, UUID> {
 
-  @Query("""
-      	SELECT image FROM ItemImageEntity image
-      	WHERE image.item = :item
-      	AND image.main = true
-      	AND image.enabled = true
-      """)
-  Optional<ItemImageEntity> findMainByItem(@Param("item") ItemEntity item);
+	@Query("""
+				SELECT image FROM ItemImageEntity image
+				WHERE image.item = :item
+				AND image.main = true
+				AND image.enabled = true
+			""")
+	Optional<ItemImageEntity> findMainByItem(@Param("item") ItemEntity item);
 
 }

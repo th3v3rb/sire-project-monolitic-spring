@@ -1,4 +1,4 @@
-package com.dantesoft.siremono.modules.items.variant.store.dto;
+package com.dantesoft.siremono.modules.items.schema.store.dto;
 
 import com.dantesoft.siremono.modules.items.variantattributedefinition.store.VariantAttributeDefinitionEntity;
 

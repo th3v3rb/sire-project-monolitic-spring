@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/variants/attributes/{attributeId}/values")
+@RequestMapping("/api/v1/items/variants/attributes/{attributeId}/values")
 @RequiredArgsConstructor
 public class VariantAttributeValueController {
   private final CommandExecutor handler;
